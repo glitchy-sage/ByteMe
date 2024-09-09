@@ -1,53 +1,35 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
-  mode: 'development',
-  entry: './src/index.js',
+  entry: './src/index.jsx', // Entry point of your application
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
+    filename: 'bundle.js', // Output bundle file
+    publicPath: '/home', // Necessary for routing
   },
   resolve: {
-    extensions: ['.js'],
+    extensions: ['.js', '.jsx'], // Automatically resolve these extensions
   },
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.(js|jsx)$/, // Transpile JS and JSX files
         exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env'],
-            plugins: [
-              ['@babel/plugin-proposal-decorators', { 'legacy': true }]
-            ]
-          },
-        },
+        use: 'babel-loader',
       },
       {
-        test: /\.css$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-        ],
+        test: /\.css$/, // Load CSS files
+        use: ['style-loader', 'css-loader'],
       },
     ],
   },
+  devServer: {
+    historyApiFallback: true, // Necessary for React Router
+  },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './dist/index.html',
-    }),
-    new MiniCssExtractPlugin({
-      filename: 'styles.css',
+      template: './public/index.html', // HTML template
     }),
   ],
-  devServer: {
-    static: path.join(__dirname, 'dist'),
-    compress: true,
-    port: 3000,
-    historyApiFallback: true,
-  },
 };
