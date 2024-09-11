@@ -1,8 +1,6 @@
-import './app.js';
-import { Router } from './router.js';
+import { App } from './app';
+import { Routing } from './Routing';
 
-console.log('Initializing Router...');
-
-// Initialize the router
-Router.init();
-Router.navigateTo('/login'); // Ensure the initial view is set
+const app = new App();
+const router = new Routing();
+app.init();

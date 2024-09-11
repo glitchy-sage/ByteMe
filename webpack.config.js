@@ -1,16 +1,19 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   mode: 'development',
   entry: './src/index.js',
   output: {
-    path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
+    path: path.resolve(__dirname, 'public'),
   },
-  resolve: {
-    extensions: ['.js'],
+  devServer: {
+    static: {
+      directory: path.join(__dirname, 'public'), // Correct way to specify the static files directory
+    },
+    compress: true,  // Enable gzip compression for everything served
+    port: 8080,      // Port for the dev server
+    open: true       // Automatically opens the browser when the server starts
   },
   module: {
     rules: [
@@ -19,35 +22,8 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env'],
-            plugins: [
-              ['@babel/plugin-proposal-decorators', { 'legacy': true }]
-            ]
-          },
         },
       },
-      {
-        test: /\.css$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-        ],
-      },
     ],
-  },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: './dist/index.html',
-    }),
-    new MiniCssExtractPlugin({
-      filename: 'styles.css',
-    }),
-  ],
-  devServer: {
-    static: path.join(__dirname, 'dist'),
-    compress: true,
-    port: 3000,
-    historyApiFallback: true,
   },
 };
