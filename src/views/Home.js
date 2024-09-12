@@ -3,7 +3,7 @@ import { router } from '../Routing';
 
 class Home {
   render() {
-    const template = html`
+    return html`
       <div class="container">
         <h2>Home Page</h2>
         <p>Welcome to the home page!</p>
@@ -11,7 +11,6 @@ class Home {
         <a href="#" @click="${(e) => this.logout(e)}">Logout</a>
       </div>
     `;
-    render(template, document.getElementById('app'));
   }
 
   goToAbout(event) {

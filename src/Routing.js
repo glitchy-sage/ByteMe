@@ -1,5 +1,5 @@
-import Sidebar from '/src/components/Sidebar';
-import { html, render } from 'lit-html';
+import { render, html } from 'lit';
+import Sidebar from '/src/components/Sidebar'; // Import your sidebar component
 
 export class Routing {
   constructor() {
@@ -13,35 +13,44 @@ export class Routing {
     window.addEventListener('popstate', () => {
       this.navigate(window.location.pathname);
     });
+
+    // Render the sidebar in a separate container
+    this.renderSidebar();
   }
 
-  // Navigate to a new route and update the URL path
+  // Function to render the sidebar
+  renderSidebar(route) {
+    const sidebarContainer = document.getElementById('sidebar');
+
+    // Conditionally render the sidebar for non-login routes
+    if (route !== '/login') {
+      render(html`<my-sidebar></my-sidebar>`, sidebarContainer); // Safely render the sidebar
+    } else {
+      render(html``, sidebarContainer); // Clear the sidebar on login page
+    }
+  }
+
+  // Function to navigate and render the appropriate page
   navigate(route) {
-    // Clear the previous content in #app before rendering a new page
     const appContainer = document.getElementById('app');
-    render(html``, appContainer);  // Clear content safely
 
     if (this.routes[route]) {
       this.routes[route]().then((module) => {
         const page = new module.default();
-        page.render();
 
-        // Show sidebar only if the route is not login
-        if (route !== '/login') {
-          const sidebar = new Sidebar();
-          sidebar.render();
-        } else {
-          // Clear the sidebar if on login page
-          render(html``, document.getElementById('sidebar')); // Clear sidebar safely
-        }
-
+        // Render the page content inside the appContainer using Lit's render method
+        render(page.render(), appContainer);
+        
+        // Conditionally render the sidebar
+        this.renderSidebar(route);
+        
         // Update the URL without reloading the page
         if (window.location.pathname !== route) {
           window.history.pushState({}, '', route);
         }
       });
     } else {
-      // Redirect to /login for invalid routes
+      // Handle 404 or redirect to login
       this.navigate('/login');
     }
   }

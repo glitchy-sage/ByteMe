@@ -11,6 +11,7 @@ module.exports = {
     static: {
       directory: path.join(__dirname, 'public'), // Correct way to specify the static files directory
     },
+    historyApiFallback: true,  // This tells the server to serve index.html for all routes
     compress: true,  // Enable gzip compression for everything served
     port: 8080,      // Port for the dev server
     open: true       // Automatically opens the browser when the server starts
