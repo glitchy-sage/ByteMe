@@ -1,6 +1,15 @@
-import { html, render } from 'lit-html';
+import { html, LitElement, css } from 'lit';
+import { sharedStyles } from '/src/styles/shared-styles';  // Import the shared styles
 
-class About {
+class About extends LitElement {
+  static styles = [
+    sharedStyles,
+    css`
+      .container {
+      border: 1px solid blue;
+      }
+    `
+  ]
   render() {
     return html`
       <div class="container">
@@ -16,5 +25,6 @@ class About {
     window.history.back();  // Navigate back to the previous page
   }
 }
+customElements.define('my-about', About);
 
 export default About;

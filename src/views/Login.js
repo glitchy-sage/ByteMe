@@ -1,44 +1,84 @@
-import { css, html, render } from 'lit';
+import { LitElement, css, html } from 'lit';
 import { router } from '../Routing';
+import { sharedStyles } from '/src/styles/shared-styles';  // Import the shared styles
 
-class Login {
-  static styles = css`
-  :host {
-    background-color: #2c3e50;
-    font-family: Arial, sans-serif;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-  }
-`;
+class Login extends LitElement {
+  static styles = [
+    sharedStyles,
+    css`
+    :host {
+      display: block;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 0.9rem;
+      color: #333;
+    }
+
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+
+    .login-button {
+      padding: 10px 20px;
+      background-color: #5e3c87;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .login-button:hover {
+      background-color: #4e2f6f;
+    }
+
+    .login-form {
+      width: 100%;
+    }
+    `
+  ];
 
   render() {
     return html`
       <div class="container">
+        <div class="login-container">
         <h2>Login</h2>
+        </div>
         <form @submit="${this.handleLogin}">
-          <div class="mb-3">
-            <label for="username" class="form-label">Username</label>
-            <input type="text" class="form-control" id="username" required />
-          </div>
-          <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="password" required />
-          </div>
-          <button type="submit" class="btn btn-primary">Login</button>
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" value="John Doe" />
+
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" />
+
+          <button type="submit" class="login-button">Login</button>
         </form>
-        <p><a href="#" @click="${(e) => this.goToAbout(e)}">Learn more about us</a></p>
       </div>
     `;
   }
 
   handleLogin(event) {
+    // add security check
     event.preventDefault();
     router.navigate('/home');
   }
-
-  goToAbout(event) {
-    event.preventDefault();
-    router.navigate('/about');
-  }
 }
 
-export default Login;
+customElements.define('my-login', Login);

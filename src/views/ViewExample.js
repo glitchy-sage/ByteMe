@@ -1,6 +1,6 @@
 import { html, css, LitElement } from 'lit';
 
-class ViewBase extends LitElement {
+class ViewExample extends LitElement {
   // Define component-specific styles using `css`
   static styles = css`
     :host {
@@ -37,4 +37,4 @@ class ViewBase extends LitElement {
 }
 
 // Define the custom element for the view
-customElements.define('viewbase', ViewBase);
+customElements.define('my-view', ViewExample);

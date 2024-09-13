@@ -1,24 +1,32 @@
-import { render, html } from 'lit';
-import Sidebar from '/src/components/Sidebar'; // Import your sidebar component
+import { html, render } from 'lit';
+import '/src/components/Sidebar';  // Import Sidebar component
+import './views/Login.js';  // Import Login component
+import './views/Home.js';   // Import Home component
+import './views/About.js';  // Import About component
+import './views/client/ClientSummary.js';  // Import client summary component
+import './views/client/ClientDetails.js';  // Import client details component
+import './views/client/ClientList.js';  // Import client list component
 
 export class Routing {
   constructor() {
+    // Define routes and their associated templates
     this.routes = {
-      '/login': () => import('./views/Login'),
-      '/home': () => import('./views/Home'),
-      '/about': () => import('./views/About'),
+      '/login': () => html`<my-login></my-login>`,
+      '/home': () => html`<my-home></my-home>`,
+      '/about': () => html`<my-about></my-about>`,
+      '/summary': () => html`<my-summary></my-summary>`,
+      '/client': () => html`<my-client></my-client>`,
+      '/list': () => html`<my-list></my-list>`,
     };
 
-    // Handle browser back/forward buttons
     window.addEventListener('popstate', () => {
       this.navigate(window.location.pathname);
     });
 
-    // Render the sidebar in a separate container
-    this.renderSidebar();
+    // Initialize the app with the current route
+    this.navigate(window.location.pathname);
   }
 
-  // Function to render the sidebar
   renderSidebar(route) {
     const sidebarContainer = document.getElementById('sidebar');
 
@@ -26,32 +34,28 @@ export class Routing {
     if (route !== '/login') {
       render(html`<my-sidebar></my-sidebar>`, sidebarContainer); // Safely render the sidebar
     } else {
-      render(html``, sidebarContainer); // Clear the sidebar on login page
+      render(html``, sidebarContainer); // Clear the sidebar on the login page
     }
   }
 
-  // Function to navigate and render the appropriate page
   navigate(route) {
     const appContainer = document.getElementById('app');
 
+    // Check if the route exists in the routes object
     if (this.routes[route]) {
-      this.routes[route]().then((module) => {
-        const page = new module.default();
+      // Render the corresponding template by invoking the function from the routes object
+      render(this.routes[route](), appContainer);  // Notice we invoke the function
 
-        // Render the page content inside the appContainer using Lit's render method
-        render(page.render(), appContainer);
-        
-        // Conditionally render the sidebar
-        this.renderSidebar(route);
-        
-        // Update the URL without reloading the page
-        if (window.location.pathname !== route) {
-          window.history.pushState({}, '', route);
-        }
-      });
+      // Conditionally render the sidebar
+      this.renderSidebar(route);
+
+      // Update the URL without reloading the page
+      if (window.location.pathname !== route) {
+        window.history.pushState({}, '', route);
+      }
     } else {
-      // Handle 404 or redirect to login
-      this.navigate('/login');
+      console.error('Route not found, redirecting to /login');
+      this.navigate('/login');  // Handle unknown routes
     }
   }
 
