@@ -100,16 +100,19 @@ class Sidebar extends LitElement {
 
   goToProfile() {
     console.log('Navigating to Profile');
+    router.navigate('/home');
     // Add your navigation logic here
   }
 
   goToSettings() {
     console.log('Navigating to Settings');
+    router.navigate('/home');
     // Add your navigation logic here
   }
 
   addNewClient() {
     console.log('Adding New Client');
+    router.navigate('/home');
     // Add your logic to add a new client here
   }
 
@@ -138,21 +141,21 @@ class Sidebar extends LitElement {
           <div class="menu-item-icon">
             <span class="icon">★</span>
           </div>
-          <div class="menu-item-label">Notes</div>
+          <div class="menu-item-label">Documents</div>
         </button>
 
         <button class="menu-item" @click="${this.goToProfile}">
           <div class="menu-item-icon">
             <span class="icon">★</span>
           </div>
-          <div class="menu-item-label">Profile</div>
+          <div class="menu-item-label">Settings</div>
         </button>
 
         <button class="menu-item" @click="${this.goToSettings}">
           <div class="menu-item-icon">
             <span class="icon">★</span>
           </div>
-          <div class="menu-item-label">Settings</div>
+          <div class="menu-item-label">Home</div>
         </button>
       </div>
     `;

@@ -108,8 +108,11 @@ class Home extends LitElement {
   ];
 
   // Navigate to ClientDetails page with the selected client name as a query parameter
-  navigateToClientDetails(clientName) {
-    window.location.href = `/client-details?client=${encodeURIComponent(clientName)}`;
+  navigateToClientDetails(event, clientName) {
+    // window.location.href = `/client-details?client=${encodeURIComponent(clientName)}`;
+    console.log("clieent name: " + clientName);
+    event.preventDefault();
+    router.navigate('/client');
   }
 
   render() {
@@ -125,12 +128,12 @@ class Home extends LitElement {
 
           <div class="search-input">
             <label for="name">Name</label>
-            <input type="text" id="name" name="name" value="John Doe" />
+            <input type="text" id="name" name="name" placeholder="John Doe" />
           </div>
 
           <div class="search-input">
             <label for="id">ID Number</label>
-            <input type="text" id="id" name="id" value="9809240106084" />
+            <input type="text" id="id" name="id" placeholder="9809240106084" />
           </div>
         </div>
 
@@ -203,7 +206,7 @@ class Home extends LitElement {
 
   renderRecentClients() {
     return ClientData.recentClients.map(client => html`
-      <div class="client-item" @click="${() => this.navigateToClientDetails(client.name)}">
+      <div class="client-item" @click="${(e) => this.navigateToClientDetails(e, client.name)}">
         <div class="client-avatar"></div>
         <h4>${client.name}</h4>
       </div>

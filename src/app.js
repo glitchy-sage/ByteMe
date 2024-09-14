@@ -1,7 +1,4 @@
-import { html, render } from 'lit';
 import { router } from './Routing';
-import './views/Login';
-import './views/Home';
 
 export class App {
   init() {
