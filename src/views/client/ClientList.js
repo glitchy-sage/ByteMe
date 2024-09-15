@@ -1,25 +1,16 @@
-import { LitElement, html, css } from 'lit';
+import { html, css } from 'lit';
 import { router } from '/src/Routing';
 import { sharedStyles } from '/src/styles/shared-styles';  // Import the shared styles
+import { ViewBase } from '../ViewBase.js'; // Import the ViewBase class
 
-class ClientList extends LitElement {
-    static styles = [
-        sharedStyles,
-        css`
+class ClientList extends ViewBase {
+  static styles = [
+    sharedStyles,
+    css`
     :host {
       display: block;
-      font-family: Arial, sans-serif;
       padding: 20px;
-      max-width: 900px;
-      margin: 0 auto;
     }
-
-    h2 {
-      font-size: 1.5rem;
-      color: #333;
-      margin-bottom: 20px;
-    }
-
     .client-list {
       display: flex;
       flex-direction: column;
@@ -73,61 +64,41 @@ class ClientList extends LitElement {
       padding: 5px 10px;
       font-size: 0.8rem;
     }
-
-    /* Buttons and hover effects */
-    .view-button {
-      padding: 10px 20px;
-      background-color: #5e3c87;
-      color: white;
-      border: none;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-
-    .view-button:hover {
-      background-color: #4e2f6f;
-    }
   `];
 
-    static properties = {
-        clients: { type: Array }
-    };
+  static properties = {
+    clients: { type: Array }
+  };
 
-    constructor() {
-        super();
-        // Default client data
-        this.clients = [
-            {
-                name: 'Dylan Barnard',
-                description: 'A financial advisor with a focus on retirement planning.',
-                tags: ['Finance', 'Retirement', 'Advisor']
-            },
-            {
-                name: 'Candice Yeatman',
-                description: 'Specializes in investment strategies for high net-worth individuals.',
-                tags: ['Investment', 'High Net-Worth']
-            },
-            {
-                name: 'John Doe',
-                description: 'Expert in tax consulting and financial planning.',
-                tags: ['Tax', 'Consulting']
-            },
-            // Add more clients here
-        ];
-    }
+  constructor() {
+    super();
+    // Default client data
+    this.clients = [
+      {
+        name: 'Dylan Barnard',
+        description: 'A financial advisor with a focus on retirement planning.',
+        tags: ['Finance', 'Retirement', 'Advisor']
+      },
+      {
+        name: 'Candice Yeatman',
+        description: 'Specializes in investment strategies for high net-worth individuals.',
+        tags: ['Investment', 'High Net-Worth']
+      },
+      {
+        name: 'John Doe',
+        description: 'Expert in tax consulting and financial planning.',
+        tags: ['Tax', 'Consulting']
+      },
+      // Add more clients here
+    ];
+  }
 
-    viewProfile(clientName) {
-        router.navigate('/summary');
-    }
-    // Navigate to the home page
-    goToHome(event) {
-        event.preventDefault();
-        router.navigate('/home');
-    }
+  viewProfile(clientName) {
+    router.navigate('/summary');
+  }
 
-    renderClientCard(client) {
-        return html`
+  renderClientCard(client) {
+    return html`
       <div class="client-card">
         <div class="client-image"></div>
         <div class="client-details">
@@ -137,22 +108,24 @@ class ClientList extends LitElement {
             ${client.tags.map(tag => html`<span class="tag">${tag}</span>`)}
           </div>
         </div>
-        <button class="view-button" @click="${() => this.viewProfile(client.name)}">View Profile</button>
+        <button class="my-button" @click="${() => this.viewProfile(client.name)}">View Profile</button>
       </div>
     `;
-    }
+  }
 
-    render() {
-        return html`
+  render() {
+    return html`
       <div class="client-list-container">
-        <button class="back-button" @click="${(e) => this.goToHome(e)}">←</button>
-        <h2>Client List</h2>
+        <div class="header">
+          <button class="back-button" @click="${(e) => this.goBack(e)}">←</button>
+          <h2>Client List</h2>
+        </div>
         <div class="client-list">
           ${this.clients.map(client => this.renderClientCard(client))}
         </div>
       </div>
     `;
-    }
+  }
 }
 
 customElements.define('my-list', ClientList);

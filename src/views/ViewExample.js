@@ -1,8 +1,11 @@
 import { html, css, LitElement } from 'lit';
+import { ViewBase } from './ViewBase.js'; // Import the ViewBase class
 
-class ViewExample extends LitElement {
+class ViewExample extends ViewBase {
   // Define component-specific styles using `css`
-  static styles = css`
+  static styles = [
+    sharedStyles,
+    css`
     :host {
       display: block;
       height: 100vh;
@@ -16,7 +19,7 @@ class ViewExample extends LitElement {
       box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
       text-align: center;
     }
-  `;
+  `];
 
   // Render the HTML template
   render() {

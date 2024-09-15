@@ -5,7 +5,24 @@ export const sharedStyles = css`
     font-family: Arial, sans-serif;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
   }
+  body {
+    font-family: Arial, sans-serif;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+  }
+    /* Buttons and hover effects */
+    .my-button {
+      padding: 10px 20px;
+      background-color: #5e3c87;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
 
+    .my-button:hover {
+    background-color: #4e2f6f;
+    }
   .profile-header {
     display: flex;
     align-items: center;
@@ -19,7 +36,22 @@ export const sharedStyles = css`
     cursor: pointer;
     margin-right: 10px;
   }
-    h3{
-    margin-bottom: 0px;
-    }
+  h3{
+    margin: 0px;
+    // margin-right: 20px;
+  }
+  h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  .header {
+    background-color: rgb(255, 255, 255);
+    height: 50px;
+    padding-left: 10px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 20px;
+  }
 `;

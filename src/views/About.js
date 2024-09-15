@@ -1,7 +1,8 @@
 import { html, LitElement, css } from 'lit';
 import { sharedStyles } from '/src/styles/shared-styles';  // Import the shared styles
+import { ViewBase } from './ViewBase.js'; // Import the ViewBase class
 
-class About extends LitElement {
+class About extends ViewBase {
   static styles = [
     sharedStyles,
     css`

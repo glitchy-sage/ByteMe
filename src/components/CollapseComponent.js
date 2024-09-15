@@ -2,73 +2,61 @@ import { LitElement, html, css } from 'lit';
 
 class CollapseComponent extends LitElement {
   static styles = css`
-    .collapse-section {
+    .group {
       border: 1px solid #ddd;
-      margin-bottom: 10px;
+      margin: 15px 0;
+      padding: 10px;
+      cursor: pointer;
+      background-color: #f8f9fa;
       border-radius: 5px;
     }
 
-    .section-header {
-      padding: 10px;
-      background-color: #f4e9f7;
-      cursor: pointer;
-      font-size: 1.1rem;
-      font-weight: bold;
+    .group h3 {
+      margin: 0;
+      font-size: 1.25rem;
+      // color: #007bff;
+      font-weight: 500;
     }
 
-    .section-content {
+    .content {
       padding: 10px;
-      display: none;
       background-color: #fff;
+      display: none;
+      border-top: 1px solid #ddd;
     }
 
-    .section-content.expanded {
+    .expanded .content {
       display: block;
     }
   `;
 
   static properties = {
-    sections: { type: Array },  // Array to hold section names
-    expandedSections: { type: Array },  // Array to track expanded sections
+    header: { type: String }, 
+    expanded: { type: Boolean }
   };
 
   constructor() {
     super();
-    this.sections = [];
-    this.expandedSections = [];
+    this.header = "";  
+    this.expanded = false;
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-    // Parse the sections from the HTML attribute
-    const sectionData = this.getAttribute('sections');
-    if (sectionData) {
-      this.sections = sectionData.split(',').map(section => section.trim());
-    }
-  }
-
-  toggleSection(index) {
-    // Check if section is already expanded
-    if (this.expandedSections.includes(index)) {
-      this.expandedSections = this.expandedSections.filter(i => i !== index);
-    } else {
-      this.expandedSections = [...this.expandedSections, index];
+  // Toggle method for collapsing/expanding
+  toggleGroup(e) {
+    // Prevent propagation to inner elements like dropdowns
+    if (e.target.tagName !== 'SELECT') {
+      this.expanded = !this.expanded;
     }
   }
 
   render() {
     return html`
-      <div>
-        ${this.sections.map((section, index) => html`
-          <div class="collapse-section">
-            <div class="section-header" @click="${() => this.toggleSection(index)}">
-              ${section}
-            </div>
-            <div class="section-content ${this.expandedSections.includes(index) ? 'expanded' : ''}">
-              <p>Details for ${section}</p> <!-- Placeholder for actual content -->
-            </div>
-          </div>
-        `)}
+      <div class="group ${this.expanded ? 'expanded' : ''}" @click="${this.toggleGroup}">
+        <h3>${this.header}</h3>
+        <!-- Stop the click event from propagating from inside the content -->
+        <div class="content" @click="${e => e.stopPropagation()}">
+          <slot></slot>
+        </div>
       </div>
     `;
   }

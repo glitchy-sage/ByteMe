@@ -1,8 +1,9 @@
 import { LitElement, css, html } from 'lit';
 import { router } from '../Routing';
 import { sharedStyles } from '/src/styles/shared-styles';  // Import the shared styles
+import { ViewBase } from './ViewBase.js'; // Import the ViewBase class
 
-class Login extends LitElement {
+class Login extends ViewBase {
   static styles = [
     sharedStyles,
     css`
@@ -34,21 +35,7 @@ class Login extends LitElement {
       font-size: 1rem;
       box-sizing: border-box;
     }
-
-    .login-button {
-      padding: 10px 20px;
-      background-color: #5e3c87;
-      color: white;
-      border: none;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-
-    .login-button:hover {
-      background-color: #4e2f6f;
-    }
-
+      
     .login-form {
       width: 100%;
     }
@@ -68,7 +55,7 @@ class Login extends LitElement {
           <label for="password">Password</label>
           <input type="password" id="password" name="password" />
 
-          <button type="submit" class="login-button">Login</button>
+          <button type="submit" class="my-button">Login</button>
         </form>
       </div>
     `;
