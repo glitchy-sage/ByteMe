@@ -35,7 +35,6 @@ class Login extends ViewBase {
       font-size: 1rem;
       box-sizing: border-box;
     }
-
     .login-form {
       width: 100%;
     }

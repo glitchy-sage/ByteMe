@@ -122,7 +122,6 @@ class Home extends ViewBase {
   navigateToClientDetails(event, clientName) {
     // window.location.href = `/client-details?client=${encodeURIComponent(clientName)}`;
     console.log("client name: " + clientName);
-
     event.preventDefault();
     router.navigate('/summary');
   }

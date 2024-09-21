@@ -485,6 +485,25 @@ class ClientSummary extends ViewBase {
           </div>
         </div>
 
+            <div class="info-group">
+                <div class="info-item">
+                <strong>Age:</strong> ${this.age}
+                </div>
+                <div class="info-item">
+                <strong>Status:</strong> ${this.status}
+                </div>
+                <div class="info-item">
+                <strong>Company:</strong> ${this.company}
+                </div>
+            </div>
+            </div>
+            <button class="my-button" @click="${(e) => this.goToMore(e)}">View More</button>
+        </div>
+    </div>
+
+    ${this._renderModal()}
+    ${this._renderPDF()}
+    
         <!-- Documents Section -->
         <div class="documents-section">
           <div class="documents-header">
@@ -523,7 +542,7 @@ class ClientSummary extends ViewBase {
         </div>
       </div>
     `;
-  }
+    }
 }
 
 customElements.define('my-summary', ClientSummary);

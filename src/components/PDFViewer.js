@@ -1,15 +1,13 @@
-// import React, { useState } from 'react';
-// import { Document, Page, pdfjs } from 'react-pdf';
+import React, { useState } from 'react';
+import { Document, Page, pdfjs } from 'react-pdf';
 
 // Set the workerSrc for PDF.js
-// pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
-const SimplePDFViewer = () => {
+const PDFViewer = ({ pdfFile }) => {
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
 
-  const smallBase64PDF = "JVBERi0xLjUKJdDUxdgKMSAwIG9iago8PC9UeXBlL1BhZ2UvUGFyZW50IDIgMCBSCi9SZXNvdXJjZXMgPDwKPj4KPj4KZW5kb2JqCjIgMCBvYmoKPDwvVHlwZS9QYWdlcy9LaWRzIFszIDAgUl0KPj4KZW5kb2JqCjMgMCBvYmoKPDwvVHlwZS9QYWdlL1BhcmVudCAyIDAgUgovTWVkaWFCb3ggWzAgMCA2MTIgNzkyXQo+PgplbmRvYmoKNCAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFIvT3V0cHV0SW50ZW50cyAoQ3JlYXRlZCBieSBwZGZqcyAwLjEuMCkKPj4KZW5kb2JqCjUgMCBvYmoKPDwvTGVuZ3RoIDEzPj4Kc3RyZWFtCkJUClJleGVjdXRlIFByb2dyYW0gVG8gU2VlIFBhcGVzCmVuZHN0cmVhbQplbmRvYmoKeHJlZgowIDYK";
-  
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
   }
@@ -17,8 +15,9 @@ const SimplePDFViewer = () => {
   return (
     <div>
       <Document
-        file={`data:application/pdf;base64,${smallBase64PDF}`}
+        file={pdfFile}
         onLoadSuccess={onDocumentLoadSuccess}
+        loading="Loading PDF..."
       >
         <Page pageNumber={pageNumber} />
       </Document>
@@ -43,4 +42,4 @@ const SimplePDFViewer = () => {
   );
 };
 
-export default SimplePDFViewer;
+export default PDFViewer;

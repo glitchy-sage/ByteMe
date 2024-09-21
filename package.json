@@ -13,7 +13,7 @@
     "lit": "^3.2.0",
     "lit-html": "^2.3.1",
     "pdf-lib": "^1.17.1",
-    "pdfjs-dist": "^2.10.377",
+    "pdfjs-dist": "^4.6.82",
     "react-pdf": "^9.1.0"
   },
   "devDependencies": {
