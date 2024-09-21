@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lit Sidebar Example</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      background: linear-gradient(0deg, #b094d1 58%, #5e3c87 135%);
+      height: 1080px;
+    }
+    #app {
+      width: 990px;
+      background-color: #efefef;
+      margin-top: 200px;
+      height: fit-content;
+    }
+    #sidebar {
+      width: 65px;
+    }
+  </style>
+</head>
+<body>
+  <div id="sidebar"></div> <!-- Sidebar container -->
+  <div id="app"></div>    <!-- Main content container -->
+  
+  <script src="bundle.js"></script> <!-- Your compiled JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+</body>
+</html>
