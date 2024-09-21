@@ -82,6 +82,10 @@ class Sidebar extends LitElement {
       font-size: 24px;
       color: #5e3c87;
     }
+    .sidebar-container {
+    display: grid;
+    justify-content: center;
+    }
   `;
 
   // Event handlers for navigation
@@ -91,39 +95,32 @@ class Sidebar extends LitElement {
     // Add your navigation logic here
   }
 
-  goToNotes() {
+  goToDocuments() {
     console.log('Navigating to Notes');
     router.navigate('/about');
 
     // Add your navigation logic here
   }
 
-  goToProfile() {
-    console.log('Navigating to Profile');
-    router.navigate('/home');
-    // Add your navigation logic here
-  }
-
-  goToSettings() {
+  goToHome() {
     console.log('Navigating to Settings');
     router.navigate('/home');
     // Add your navigation logic here
   }
 
-  addNewClient() {
+  goToLogin() {
     console.log('Adding New Client');
-    router.navigate('/home');
+    router.navigate('/login');
     // Add your logic to add a new client here
+  }
+
+  addNewClient() {
+    router.navigate('/summary');
   }
 
   render() {
     return html`
       <div class="sidebar-container">
-        <!-- Menu Toggle Icon -->
-        <div class="menu-toggle">
-          <span class="icon">☰</span>
-        </div>
-
         <!-- New Client Button -->
         <button class="new-client-button" @click="${this.addNewClient}">
           <span class="icon">+</span>
@@ -137,25 +134,23 @@ class Sidebar extends LitElement {
           <div class="menu-item-label">Clients</div>
         </button>
 
-        <button class="menu-item" @click="${this.goToNotes}">
+        <button class="menu-item" @click="${this.goToDocuments}">
           <div class="menu-item-icon">
             <span class="icon">★</span>
           </div>
           <div class="menu-item-label">Documents</div>
         </button>
-
-        <button class="menu-item" @click="${this.goToProfile}">
-          <div class="menu-item-icon">
-            <span class="icon">★</span>
-          </div>
-          <div class="menu-item-label">Settings</div>
-        </button>
-
-        <button class="menu-item" @click="${this.goToSettings}">
+        <button class="menu-item" @click="${this.goToHome}">
           <div class="menu-item-icon">
             <span class="icon">★</span>
           </div>
           <div class="menu-item-label">Home</div>
+        </button>
+        <button class="menu-item" @click="${this.goToLogin}">
+          <div class="menu-item-icon">
+            <span class="icon">★</span>
+          </div>
+          <div class="menu-item-label">Logout</div>
         </button>
       </div>
     `;
