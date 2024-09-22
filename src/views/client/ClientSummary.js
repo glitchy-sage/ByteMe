@@ -246,10 +246,10 @@ class ClientSummary extends ViewBase {
         background-color: #6A1B9A;
         color: white;
         border: none;
-        padding: 5px 10px;
+        padding: 10px 20px;
         border-radius: 20px;
         cursor: pointer;
-        font-size: 11px;
+        font-size: 14px;
       }
 
       .button.cancel {
@@ -271,7 +271,6 @@ class ClientSummary extends ViewBase {
     totalPages: { type: Number },
     currentPDF: { type: Object }, // Store the current PDF data
     originalPDF: { type: Object } // Store the original PDF data for resetting
-
   };
 
   constructor() {
@@ -304,13 +303,13 @@ class ClientSummary extends ViewBase {
     ];
 
     // Render the default PDF on load
-    this.currentPDF = this.pdfs[this.pdfIndex];
-    this.originalPDF = this.currentPDF; // Save the original PDF
+    this.currentPDF = this.pdfs[this.pdfIndex].slice(0); // Clone the array buffer
+    this.originalPDF = this.currentPDF.slice(0); // Save the original PDF
     this.renderPDF(this.currentPDF, this.currentPageIndex);
   }
 
   goToMore(event) {
-    // event.preventDefault();
+    event.preventDefault();
     router.navigate('/client');
   }
 
@@ -325,11 +324,11 @@ class ClientSummary extends ViewBase {
     for (let i = 0; i < len; i++) {
       bytes[i] = binaryString.charCodeAt(i);
     }
-    return bytes.buffer;
+    return bytes.buffer; // Return a new buffer
   }
 
   async extractTextPositions(pdfData, keyWord, pageIndex) {
-    const loadingTask = pdfjsLib.getDocument({ data: pdfData });
+    const loadingTask = pdfjsLib.getDocument({ data: pdfData.slice(0) }); // Pass a fresh copy
     const pdf = await loadingTask.promise;
     const page = await pdf.getPage(pageIndex);
     const textContent = await page.getTextContent();
@@ -337,9 +336,8 @@ class ClientSummary extends ViewBase {
     return textContent.items.find(item => item.str.toLowerCase().includes(keyWord));
   }
 
-
   async modifyAndRenderPDF(pdfData) {
-    const pdfDoc = await PDFDocument.load(pdfData);
+    const pdfDoc = await PDFDocument.load(pdfData.slice(0)); // Ensure a fresh copy is passed
     const pages = pdfDoc.getPages();
 
     // Loop through all pages to add text
@@ -364,10 +362,9 @@ class ClientSummary extends ViewBase {
   }
 
   async addText(page, pdfData, pdfDoc, keyWord, text, xAdjust = 10, yAdjust = -10, pageIndex) {
-    const titlePosition = await this.extractTextPositions(pdfData, keyWord, pageIndex);
+    const titlePosition = await this.extractTextPositions(pdfData.slice(0), keyWord, pageIndex);
 
     if (!titlePosition) {
-      console.error(`${keyWord} not found on page ${pageIndex}`);
       return;
     }
 
@@ -386,21 +383,21 @@ class ClientSummary extends ViewBase {
   }
 
   async handleSelectTemplate() {
-    const currentPDF = this.pdfs[this.pdfIndex];
+    const currentPDF = this.pdfs[this.pdfIndex].slice(0); // Clone to avoid detaching the buffer
     await this.modifyAndRenderPDF(currentPDF);
   }
 
   async clearTemplate() {
     // Restore the original PDF and re-render it
-    this.currentPDF = this.originalPDF;
+    this.currentPDF = this.originalPDF.slice(0); // Ensure it's a copy
     this.renderPDF(this.currentPDF, this.currentPageIndex);
   }
 
   switchPDF(direction) {
     this.pdfIndex = (this.pdfIndex + direction + this.pdfs.length) % this.pdfs.length;
     this.currentPageIndex = 1; // Reset to the first page of the new PDF
-    this.currentPDF = this.pdfs[this.pdfIndex]; // Load the selected PDF
-    this.originalPDF = this.currentPDF; // Save the original PDF again
+    this.currentPDF = this.pdfs[this.pdfIndex].slice(0); // Load a fresh copy of the selected PDF
+    this.originalPDF = this.currentPDF.slice(0); // Save the original PDF again
     this.renderPDF(this.currentPDF, this.currentPageIndex);
   }
 
@@ -410,7 +407,7 @@ class ClientSummary extends ViewBase {
   }
 
   renderPDF(pdfData, pageIndex) {
-    const loadingTask = pdfjsLib.getDocument({ data: pdfData });
+    const loadingTask = pdfjsLib.getDocument({ data: pdfData.slice(0) }); // Clone to avoid issues
     loadingTask.promise.then(pdf => {
       this.totalPages = pdf.numPages;
       pdf.getPage(pageIndex).then(page => {
@@ -481,29 +478,10 @@ class ClientSummary extends ViewBase {
               <strong>Office:</strong>
               <span>Morebo Wealth</span>
             </div>
-            <button class="button" @click="${(e) => this.goToMore()}">View More</button>
+            <button class="button">View More</button>
           </div>
         </div>
 
-            <div class="info-group">
-                <div class="info-item">
-                <strong>Age:</strong> ${this.age}
-                </div>
-                <div class="info-item">
-                <strong>Status:</strong> ${this.status}
-                </div>
-                <div class="info-item">
-                <strong>Company:</strong> ${this.company}
-                </div>
-            </div>
-            </div>
-            <button class="my-button" @click="${(e) => this.goToMore(e)}">View More</button>
-        </div>
-    </div>
-
-    ${this._renderModal()}
-    ${this._renderPDF()}
-    
         <!-- Documents Section -->
         <div class="documents-section">
           <div class="documents-header">
@@ -527,22 +505,21 @@ class ClientSummary extends ViewBase {
         <div class="popup-overlay ${this.showPopup ? 'show' : ''}">
           <div class="popup-content">
             <button class="close-button" @click="${this.togglePopup}">✖</button>
-            <h3>Select template PDF for ${this.clientName}</h3>
+            <h3>Select template PDF to populate with information for ${this.clientName}</h3>
             <span class="arrow-left" @click="${() => this.switchPDF(-1)}">←</span>
             <span class="arrow-right" @click="${() => this.switchPDF(1)}">→</span>
             <canvas id="pdfCanvas"></canvas>
             <div class="footer">
               <button class="button" @click="${() => this.changePage(-1)}">Previous Page</button>
               <button class="button" @click="${() => this.changePage(1)}">Next Page</button>
+              <button class="button cancel" @click="${this.clearTemplate}">Clear Template</button>
               <button class="button" @click="${this.handleSelectTemplate}">Select template</button>
-              <button class="button" @click="${this.togglePopup}">Download template</button>
-              <button class="button cancel" @click="${this.clearTemplate}">Clear template</button>
             </div>
           </div>
         </div>
       </div>
     `;
-    }
+  }
 }
 
 customElements.define('my-summary', ClientSummary);
