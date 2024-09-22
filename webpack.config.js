@@ -5,11 +5,11 @@ module.exports = {
   entry: './src/index.js',
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'public'),
+    path: path.resolve(__dirname, 'dist'),
   },
   devServer: {
     static: {
-      directory: path.join(__dirname, 'public'), // Correct way to specify the static files directory
+      directory: path.join(__dirname, 'dist'), // Correct way to specify the static files directory
     },
     historyApiFallback: true,  // This tells the server to serve index.html for all routes
     compress: true,  // Enable gzip compression for everything served
