@@ -46,12 +46,9 @@ export const sharedStyles = css`
     margin-bottom: 20px;
   }
   .header {
-    background-color: rgb(255, 255, 255);
     height: 50px;
-    padding-left: 10px;
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    margin-bottom: 20px;
   }
 `;

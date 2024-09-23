@@ -4,6 +4,8 @@ import { sharedStyles } from '/src/styles/shared-styles';  // Import the shared 
 import { ClientData } from '/src/models/ClientData'; // Importing the client data
 import { ClientProfileService } from '/src/services/ClientProfileService';
 import { ViewBase } from './ViewBase.js'; // Import the ViewBase class
+import { store } from '/src/Store';
+import { clients } from '/src/constants/ClientList';
 
 const clientProfileService = new ClientProfileService();
 class Home extends ViewBase {
@@ -15,14 +17,18 @@ class Home extends ViewBase {
 
   initialise() {
     // Fetch a client profile by entity ID
-    const clientDetails = clientProfileService.getClientProfile('1')
-      .then(profile => {
-        console.log('Client Profile:', profile);
-        // Render the profile using lit-html or handle it as needed
-      })
-      .catch(error => {
-        console.error('Error fetching client profile:', error);
-      });
+    // const clientDetails = clientProfileService.getAllClients()
+    //   .then(profile => {
+    //     console.log('Client Profile:', profile);
+    //     // Render the profile using lit-html or handle it as needed
+    //   })
+    //   .catch(error => {
+    //     console.error('Error fetching client profile:', error);
+    //   });
+  }
+  
+  firstUpdated(){
+    this.addEnterKeyListener();
   }
 
   static styles = [
@@ -37,6 +43,7 @@ class Home extends ViewBase {
     .home-container {
       max-width: 900px;
       margin: 0 auto;
+        background-image: url("/src/images/avatar.png");
     }
 
     h2 {
@@ -50,6 +57,7 @@ class Home extends ViewBase {
       align-items: center;
       margin-bottom: 20px;
       font-size: 1.1rem;
+      margin-top: 1.1rem;
     }
 
     .search-container {
@@ -118,11 +126,19 @@ class Home extends ViewBase {
     `
   ];
 
-  // Navigate to ClientDetails page with the selected client name as a query parameter
-  navigateToClientDetails(event, clientName) {
-    // window.location.href = `/client-details?client=${encodeURIComponent(clientName)}`;
-    console.log("client name: " + clientName);
+  addEnterKeyListener() {
+    this.shadowRoot.addEventListener('keypress', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        this._existingClient(event);
+      }
+    });
+  }
+
+  navigateToClientDetails(event, client) {
     event.preventDefault();
+    console.log(client);
+    store.set('clientInfo', { client });
     router.navigate('/summary');
   }
 
@@ -133,14 +149,20 @@ class Home extends ViewBase {
 
   _existingClient(event) {
     event.preventDefault();
+    const name = this.shadowRoot.getElementById('name').value;
+    const id = this.shadowRoot.getElementById('id').value;
+
+    // Store the search parameters
+    store.set('searchParams', { name, id });
+
+    // Navigate to the client list view
     router.navigate('/list');
-  }
+}
 
   render() {
     return html`
 <div class="home-container">
         <h2>Byte Me</h2>
-
         <!-- Search Client Section -->
         <div class="header">
           <h3>Search client</h3>
@@ -166,12 +188,13 @@ class Home extends ViewBase {
 
         <!-- Recent Clients Section -->
         <div class="section-title">
-          <h3>Recent clients</h3>
+          <h3>Recent clients (10 of 50)</h3>
         </div>
 
         <div class="recent-clients">
           ${this.renderRecentClients()}
         </div>
+          <button class="my-button" @click="${(e) => this._newClient(e)}">View more</button>
 
         <!-- Documents Section -->
         <div class="section-title">
@@ -224,8 +247,10 @@ class Home extends ViewBase {
   }
 
   renderRecentClients() {
-    return ClientData.recentClients.map(client => html`
-      <div class="client-item" @click="${(e) => this.navigateToClientDetails(e, client.name)}">
+    // Sort clients by last interaction date
+    const recentClients = [...clients].sort((a, b) => new Date(b.lastInteractionDate) - new Date(a.lastInteractionDate)).slice(0, 10);
+    return recentClients.map(client => html`
+      <div class="client-item" @click="${(e) => this.navigateToClientDetails(e, client)}">
         <div class="client-avatar"></div>
         <h4>${client.name}</h4>
       </div>

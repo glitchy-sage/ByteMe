@@ -42,8 +42,8 @@ class Sidebar extends LitElement {
     }
 
     .menu-item-icon {
-      width: 40px;
-      height: 40px;
+      width: 60px;
+      height: 60px;
       background-color: #f4e9f7;
       border-radius: 50%;
       display: flex;
@@ -122,9 +122,12 @@ class Sidebar extends LitElement {
     return html`
       <div class="sidebar-container">
         <!-- New Client Button -->
-        <button class="new-client-button" @click="${this.addNewClient}">
-          <span class="icon">+</span>
-        </button>
+        <button class="menu-item new-client-button " @click="${this.addNewClient}">
+          <div class="menu-item-icon">
+            <span class="icon">+</span>
+          </div>
+          <div class="menu-item-label">New Client</div>
+          </button>
 
         <!-- Sidebar Menu Items -->
         <button class="menu-item active" @click="${this.goToClients}">

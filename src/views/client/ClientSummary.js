@@ -5,6 +5,9 @@ import { sharedStyles } from '../../styles/shared-styles.js';
 import * as pdfjsLib from 'pdfjs-dist';
 import 'pdfjs-dist/build/pdf.worker.entry';
 import { PDFDocument, rgb } from 'pdf-lib';
+import { store } from '/src/Store';
+import { clientInfo } from '/src/constants/ClientInfo'
+
 import { TAX_FREE } from '/src/constants/TaxFree';
 import { INVESTMENT_POLICY } from '/src/constants/InvestmentPolicy';
 import { LIVING_ANNUITY } from '/src/constants/LivingAnnuity';
@@ -21,6 +24,9 @@ class ClientSummary extends ViewBase {
     sharedStyles,
     css`
       /* General styles */
+      :host {
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+      }
       body {
         background-color: #f9f9f9;
         margin: 0;
@@ -249,7 +255,7 @@ class ClientSummary extends ViewBase {
         padding: 10px 20px;
         border-radius: 20px;
         cursor: pointer;
-        font-size: 14px;
+        font-size: 11px;
       }
 
       .button.cancel {
@@ -270,13 +276,14 @@ class ClientSummary extends ViewBase {
     currentPageIndex: { type: Number },
     totalPages: { type: Number },
     currentPDF: { type: Object }, // Store the current PDF data
-    originalPDF: { type: Object } // Store the original PDF data for resetting
-  };
+    originalPDF: { type: Object }, // Store the original PDF data for resetting
+    clientInfo: { type: Object } 
+  }
 
   constructor() {
     super();
     this.showPopup = false;
-    this.clientName = `Dylan Barnard`;
+    this.clientName = ``;
     this.dob = `25/01/1981`;
     this.language = `English`;
     this.company = `Morebo`;
@@ -288,6 +295,7 @@ class ClientSummary extends ViewBase {
     this.totalPages = 0;
     this.currentPDF = null;
     this.originalPDF = null;
+    this.clientInfo = {};
 
     this.pdfs = [
       this.base64ToArrayBuffer(TAX_FREE),
@@ -306,8 +314,30 @@ class ClientSummary extends ViewBase {
     this.currentPDF = this.pdfs[this.pdfIndex].slice(0); // Clone the array buffer
     this.originalPDF = this.currentPDF.slice(0); // Save the original PDF
     this.renderPDF(this.currentPDF, this.currentPageIndex);
+    this.initialise();
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    // const storedClientInfo = store.get('clientInfo');
+    // if (storedClientInfo) {
+    //   this.clientInfo = storedClientInfo.client;
+    //   console.log(this.clientInfo);
+    // }
+  }
+
+  initialise() {
+    const storedClientInfo = store.get('clientInfo');
+    if (storedClientInfo && storedClientInfo.client) {
+      const fullClientInfo = clientInfo.find(client => client.passportOrId === storedClientInfo.client.IDNumber);
+      if (fullClientInfo) {
+        this.clientInfo = fullClientInfo;
+        console.log(this.clientInfo);
+      } else {
+        console.error('Client not found in ClientInfo.js');
+      }
+    }
+  }
   goToMore(event) {
     event.preventDefault();
     router.navigate('/client');
@@ -344,16 +374,17 @@ class ClientSummary extends ViewBase {
     for (let i = 0; i < pages.length; i++) {
       const currentPage = pages[i];
 
+      // await this.addText(currentPage, pdfData, pdfDoc, 'title', this.clientInfo.title, 5, 3, i + 1);
       await this.addText(currentPage, pdfData, pdfDoc, 'title', 'Mr', 5, 3, i + 1);
-      await this.addText(currentPage, pdfData, pdfDoc, 'surname', 'Surname', 5, 3, i + 1);
-      await this.addText(currentPage, pdfData, pdfDoc, 'first name', 'John', 5, 3, i + 1);
-      await this.addText(currentPage, pdfData, pdfDoc, 'id or passport number', '9804240216082', 5, 3, i + 1);
-      await this.addText(currentPage, pdfData, pdfDoc, 'date of birth', '24 April 1998', 5, 3, i + 1);
-      await this.addText(currentPage, pdfData, pdfDoc, 'residential address', '22 Flufftail close, Strand', -250, -268, i + 1);
-      await this.addText(currentPage, pdfData, pdfDoc, 'postal address', 'NA', -160, -50, i + 1);
-      await this.addText(currentPage, pdfData, pdfDoc, 'email', 'mymail@gmail.com', 5, 3, i + 1);
-      await this.addText(currentPage, pdfData, pdfDoc, 'telephone number', '011   822 2653', 10, 3, i + 1);
-      await this.addText(currentPage, pdfData, pdfDoc, 'work number', '021 948 8533', 5, 3, i + 1);
+      await this.addText(currentPage, pdfData, pdfDoc, 'surname', this.clientInfo.surname, 5, 3, i + 1);
+      await this.addText(currentPage, pdfData, pdfDoc, 'first name', this.clientInfo.firstName, 5, 3, i + 1);
+      await this.addText(currentPage, pdfData, pdfDoc, 'id or passport number', this.clientInfo.passportOrId, 5, 3, i + 1);
+      await this.addText(currentPage, pdfData, pdfDoc, 'date of birth', this.clientInfo.dateOfBirth, 5, 3, i + 1);
+      // await this.addText(currentPage, pdfData, pdfDoc, 'residential address', this.clientInfo.residentialAddress, -250, -268, i + 1);
+      // await this.addText(currentPage, pdfData, pdfDoc, 'postal address', this.clientInfo.postalAddress, -160, -50, i + 1);
+      // await this.addText(currentPage, pdfData, pdfDoc, 'email', this.clientInfo.email, 5, 3, i + 1);
+      // await this.addText(currentPage, pdfData, pdfDoc, 'telephone number', this.clientInfo.telephoneNumber, 10, 3, i + 1);
+      // await this.addText(currentPage, pdfData, pdfDoc, 'work number', this.clientInfo.workNumber, 5, 3, i + 1);
     }
 
     // Save the modified PDF and set it as the current PDF
@@ -445,40 +476,36 @@ class ClientSummary extends ViewBase {
             <div class="placeholder"></div>
           </div>
           <div class="profile-details">
-            <h3>Dylan Barnard</h3>
+            <h3>${this.clientInfo.firstName} ${this.clientInfo.surname}</h3>
             <div class="detail-item">
               <strong>ID Number:</strong>
-              <span>9709240106084</span>
+              <span>${this.clientInfo.passportOrId}</span>
             </div>
             <div class="detail-item">
               <strong>Entity ID:</strong>
-              <span>9e996e9f-f4d7-423b-9b46-5155fb15d43b</span>
+              <span>${this.clientInfo.entityId}</span>
             </div>
             <div class="detail-item">
               <strong>Client Code:</strong>
-              <span>MRW/1/5675</span>
+              <span>${this.clientInfo.clientCode}</span>
             </div>
             <div class="detail-item">
               <strong>Company:</strong>
-              <span>Morebo</span>
+              <span>${this.clientInfo.company}</span>
             </div>
             <div class="detail-item">
               <strong>Date of Birth:</strong>
-              <span>25/01/1981</span>
+              <span>${this.clientInfo.dateOfBirth}</span>
             </div>
             <div class="detail-item">
               <strong>Language:</strong>
-              <span>English</span>
+              <span>${this.clientInfo.homeLanguage}</span>
             </div>
             <div class="detail-item">
-              <strong>Status:</strong>
-              <span>Potential client</span>
+              <strong>Last interaction date:</strong>
+              <span>${this.clientInfo.lastInteractionDate}</span>
             </div>
-            <div class="detail-item">
-              <strong>Office:</strong>
-              <span>Morebo Wealth</span>
-            </div>
-            <button class="button">View More</button>
+            <button class="button" @click="${(e) => this.goToMore(e)}">View More</button>
           </div>
         </div>
 
@@ -498,6 +525,24 @@ class ClientSummary extends ViewBase {
                 <p>Populate your PDF template with this client's information</p>
               </div>
             </div>
+            <div class="document-item" @click="${this.togglePopup}">
+              <div class="document-icon">
+                <div class="icon-placeholder"></div>
+              </div>
+              <div class="document-info">
+                <h4>Meeting notes</h4>
+                <p>Populate your PDF template with this client's information</p>
+              </div>
+            </div>
+            <div class="document-item" @click="${this.togglePopup}">
+              <div class="document-icon">
+                <div class="icon-placeholder"></div>
+              </div>
+              <div class="document-info">
+                <h4>New meeting</h4>
+                <p>Populate your PDF template with this client's information</p>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -505,15 +550,16 @@ class ClientSummary extends ViewBase {
         <div class="popup-overlay ${this.showPopup ? 'show' : ''}">
           <div class="popup-content">
             <button class="close-button" @click="${this.togglePopup}">✖</button>
-            <h3>Select template PDF to populate with information for ${this.clientName}</h3>
+            <h3>Select template PDF to populate with information for ${this.clientInfo.firstName} ${this.clientInfo.surname}</h3>
             <span class="arrow-left" @click="${() => this.switchPDF(-1)}">←</span>
             <span class="arrow-right" @click="${() => this.switchPDF(1)}">→</span>
             <canvas id="pdfCanvas"></canvas>
             <div class="footer">
               <button class="button" @click="${() => this.changePage(-1)}">Previous Page</button>
               <button class="button" @click="${() => this.changePage(1)}">Next Page</button>
-              <button class="button cancel" @click="${this.clearTemplate}">Clear Template</button>
+              <button class="button" @click="${() => this.changePage(1)}">Download</button>
               <button class="button" @click="${this.handleSelectTemplate}">Select template</button>
+              <button class="button cancel" @click="${this.clearTemplate}">Clear Template</button>
             </div>
           </div>
         </div>

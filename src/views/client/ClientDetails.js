@@ -10,9 +10,9 @@ class ClientDetails extends ViewBase {
     :host {
       display: block;
       font-family: Arial, sans-serif;
-      padding: 20px;
+      padding: 50px;
       max-width: 900px;
-      margin: 0 auto;
+      // margin: 0 auto;
     }
 
     h2 {

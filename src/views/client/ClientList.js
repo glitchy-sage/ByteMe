@@ -2,6 +2,8 @@ import { html, css } from 'lit';
 import { router } from '/src/Routing';
 import { sharedStyles } from '/src/styles/shared-styles';  // Import the shared styles
 import { ViewBase } from '../ViewBase.js'; // Import the ViewBase class
+import { store } from '/src/Store';
+import { clients } from '/src/constants/ClientList';
 
 class ClientList extends ViewBase {
   static styles = [
@@ -10,6 +12,8 @@ class ClientList extends ViewBase {
     :host {
       display: block;
       padding: 20px;
+      overflow: scroll;
+      height: 780px;
     }
     .client-list {
       display: flex;
@@ -73,27 +77,30 @@ class ClientList extends ViewBase {
   constructor() {
     super();
     // Default client data
-    this.clients = [
-      {
-        name: 'Dylan Barnard',
-        description: 'A financial advisor with a focus on retirement planning.',
-        tags: ['Finance', 'Retirement', 'Advisor']
-      },
-      {
-        name: 'Candice Yeatman',
-        description: 'Specializes in investment strategies for high net-worth individuals.',
-        tags: ['Investment', 'High Net-Worth']
-      },
-      {
-        name: 'John Doe',
-        description: 'Expert in tax consulting and financial planning.',
-        tags: ['Tax', 'Consulting']
-      },
-      // Add more clients here
-    ];
+    this.clients = clients;
+    this.filteredClients = this.clients;
   }
 
-  viewProfile(clientName) {
+  connectedCallback() {
+    super.connectedCallback();
+    const searchParams = store.get('searchParams');
+
+    if (searchParams) {
+      const { name, id } = searchParams;
+      this.filteredClients = this.clients.filter(client =>
+        (name && client.name.toLowerCase().includes(name.toLowerCase())) ||
+        (id && client.id && client.id.includes(id))
+      );
+
+      // Clear the search parameters after use
+      store.clear('searchParams');
+    }
+  }
+
+  viewProfile(client) {
+    console.log(client);
+    store.set('clientInfo', { client });
+
     router.navigate('/summary');
   }
 
@@ -108,7 +115,7 @@ class ClientList extends ViewBase {
             ${client.tags.map(tag => html`<span class="tag">${tag}</span>`)}
           </div>
         </div>
-        <button class="my-button" @click="${() => this.viewProfile(client.name)}">View Profile</button>
+        <button class="my-button" @click="${() => this.viewProfile(client)}">View Profile</button>
       </div>
     `;
   }
@@ -121,7 +128,10 @@ class ClientList extends ViewBase {
           <h2>Client List</h2>
         </div>
         <div class="client-list">
-          ${this.clients.map(client => this.renderClientCard(client))}
+          ${this.filteredClients?.length > 0
+        ? this.filteredClients.map(client => this.renderClientCard(client))
+        : html`<p>No clients found.</p>`
+      }
         </div>
       </div>
     `;
