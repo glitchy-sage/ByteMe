@@ -1,130 +1,190 @@
 import { html, LitElement, css } from 'lit';
 import { router } from '../Routing';
-import { sharedStyles } from '/src/styles/shared-styles';  // Import the shared styles
-import { ClientData } from '/src/models/ClientData'; // Importing the client data
-import { ClientProfileService } from '/src/services/ClientProfileService';
-import { ViewBase } from './ViewBase.js'; // Import the ViewBase class
+import { sharedStyles } from '/src/styles/shared-styles';  
 import { store } from '/src/Store';
 import { clients } from '/src/constants/ClientList';
 
-const clientProfileService = new ClientProfileService();
-class Home extends ViewBase {
+class Home extends LitElement {
+
+  static styles = [
+    sharedStyles,
+    css`
+      :host {
+        display: block;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+      }
+
+      .home-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 10px;
+      }
+
+      .header-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .header-icons {
+        display: flex;
+        gap: 15px;
+      }
+
+      .header-icons img {
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+      }
+
+      .header-image {
+        width: 100%;
+        height: 200px;
+        background-image: url("/src/images/avatar.png");
+        background-size: cover;
+        background-position: center;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        position: relative;
+        display: flex;
+        align-items: flex-end;
+        padding: 20px;
+        justify-content: space-between;
+      }
+
+      .header-buttons {
+        display: flex;
+        gap: 15px;
+      }
+
+      .header-buttons button {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        // border: none;
+        // border-radius: 5px;
+        cursor: pointer;
+        // color: white;
+        // background-color: #6c757d; /* Button color */
+      }
+
+      h2 {
+        margin-bottom: 20px;
+        font-size: 1.5rem;
+        color: #333;
+      }
+
+      .section-title {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        font-size: 1.1rem;
+        margin-top: 1.1rem;
+      }
+
+      .search-container {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+      }
+
+      .search-input {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-width: 250px;
+      }
+
+      .search-input input {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 1rem;
+      }
+
+      .client-buttons {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+      }
+
+      .client-buttons button {
+        flex: 1;
+        padding: 10px;
+        font-size: 1rem;
+        // border: none;
+        // border-radius: 5px;
+        cursor: pointer;
+        // background-color: #6c757d; /* Button color */
+        // color: white;
+      }
+
+      .recent-clients, .documents {
+        display: flex;
+        gap: 20px;
+        overflow-x: auto;
+        flex-wrap: wrap;
+      }
+
+      .client-item, .document-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 100px;
+        margin-bottom: 20px;
+      }
+
+      .client-avatar, .document-icon {
+        width: 60px;
+        height: 60px;
+        background-color: #e0e0e0;
+        border-radius: 50%;
+        margin-bottom: 10px;
+      }
+
+      .document-icon {
+        border-radius: 10px;
+      }
+
+      .recent-clients h4, .document-item h4 {
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 768px) {
+        .header-image {
+          flex-direction: column;
+          height: auto;
+          padding: 20px 10px;
+        }
+
+        .header-buttons {
+          flex-direction: column;
+          align-items: center;
+          gap: 10px;
+          margin-top: 10px;
+        }
+
+        .client-buttons {
+          flex-direction: column;
+        }
+      }
+    `
+  ];
 
   constructor() {
     super();
     this.initialise();
   }
 
-  initialise() {
-    // Fetch a client profile by entity ID
-    // const clientDetails = clientProfileService.getAllClients()
-    //   .then(profile => {
-    //     console.log('Client Profile:', profile);
-    //     // Render the profile using lit-html or handle it as needed
-    //   })
-    //   .catch(error => {
-    //     console.error('Error fetching client profile:', error);
-    //   });
-  }
-  
-  firstUpdated(){
+  initialise() {}
+
+  firstUpdated() {
     this.addEnterKeyListener();
   }
-
-  static styles = [
-    sharedStyles,
-    css`
-    :host {
-      display: block;
-      padding: 20px;
-      font-family: Arial, sans-serif;
-    }
-
-    .home-container {
-      max-width: 900px;
-      margin: 0 auto;
-        background-image: url("/src/images/avatar.png");
-    }
-
-    h2 {
-      margin-bottom: 20px;
-      font-size: 1.5rem;
-      color: #333;
-    }
-
-    .section-title {
-      display: flex;
-      align-items: center;
-      margin-bottom: 20px;
-      font-size: 1.1rem;
-      margin-top: 1.1rem;
-    }
-
-    .search-container {
-      display: flex;
-      gap: 20px;
-      margin-bottom: 30px;
-    }
-
-    .search-input {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .search-input input {
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 1rem;
-    }
-
-    .client-buttons {
-      display: flex;
-      gap: 20px;
-    }
-
-    .recent-clients, .documents {
-      display: flex;
-      gap: 20px;
-      overflow-x: auto;
-    }
-
-    .client-item, .document-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      width: 100px;
-    }
-
-    .client-avatar, .document-icon {
-      width: 60px;
-      height: 60px;
-      background-color: #e0e0e0;
-      border-radius: 50%;
-      margin-bottom: 10px;
-    }
-
-    .document-icon {
-      border-radius: 10px;
-    }
-
-    .recent-clients h4, .document-item h4 {
-      font-size: 0.9rem;
-    }
-
-    .documents .document-item {
-      width: 100px;
-    }
-    .client-item:hover {
-    cursor: pointer;
-    }
-    .document-item:hover {
-    cursor: pointer;
-    }
-    `
-  ];
 
   addEnterKeyListener() {
     this.shadowRoot.addEventListener('keypress', (event) => {
@@ -137,7 +197,6 @@ class Home extends ViewBase {
 
   navigateToClientDetails(event, client) {
     event.preventDefault();
-    console.log(client);
     store.set('clientInfo', { client });
     router.navigate('/summary');
   }
@@ -152,28 +211,32 @@ class Home extends ViewBase {
     const name = this.shadowRoot.getElementById('name').value;
     const id = this.shadowRoot.getElementById('id').value;
 
-    // Store the search parameters
     store.set('searchParams', { name, id });
 
-    // Navigate to the client list view
     router.navigate('/list');
-}
+  }
 
   render() {
     return html`
-<div class="home-container">
-        <h2>Byte Me</h2>
+      <div class="home-container">
+      <h2>Byte Me</h2>
+        <!-- Grey Image with Buttons -->
+        <div class="header-image">
+          <div class="header-buttons">
+            <button class="my-button" @click="${() => router.navigate('/list')}">View all clients</button>
+            <button class="my-button" @click="${() => router.navigate('/dashboard')}">Dashboard</button>
+          </div>
+        </div>
+
         <!-- Search Client Section -->
         <div class="header">
           <h3>Search client</h3>
         </div>
         <div class="search-container">
-
           <div class="search-input">
             <label for="name">Name</label>
             <input type="text" id="name" name="name" placeholder="John Doe" />
           </div>
-
           <div class="search-input">
             <label for="id">ID Number</label>
             <input type="text" id="id" name="id" placeholder="9809240106084" />
@@ -190,65 +253,15 @@ class Home extends ViewBase {
         <div class="section-title">
           <h3>Recent clients (10 of 50)</h3>
         </div>
-
         <div class="recent-clients">
           ${this.renderRecentClients()}
-        </div>
-          <button class="my-button" @click="${(e) => this._newClient(e)}">View more</button>
-
-        <!-- Documents Section -->
-        <div class="section-title">
-          <h3>Documents</h3>
-        </div>
-
-        <div class="documents">
-          <div class="document-item">
-            <div class="document-icon"></div>
-            <h4>Generate PDF</h4>
-          </div>
-
-          <div class="document-item">
-            <div class="document-icon"></div>
-            <h4>Download existing PDF</h4>
-          </div>
-
-          <div class="document-item">
-            <div class="document-icon"></div>
-            <h4>New meeting...</h4>
-          </div>
-
-          <div class="document-item">
-            <div class="document-icon"></div>
-            <h4>View meeting notes...</h4>
-          </div>
-
-          <div class="document-item">
-            <div class="document-icon"></div>
-            <h4>Action</h4>
-          </div>
-
-          <div class="document-item">
-            <div class="document-icon"></div>
-            <h4>Action</h4>
-          </div>
-
-          <div class="document-item">
-            <div class="document-icon"></div>
-            <h4>Action</h4>
-          </div>
-
-          <div class="document-item">
-            <div class="document-icon"></div>
-            <h4>Action</h4>
-          </div>
         </div>
       </div>
     `;
   }
 
   renderRecentClients() {
-    // Sort clients by last interaction date
-    const recentClients = [...clients].sort((a, b) => new Date(b.lastInteractionDate) - new Date(a.lastInteractionDate)).slice(0, 10);
+    const recentClients = [...clients].sort((a, b) => new Date(b.lastInteractionDate) - new Date(a.lastInteractionDate)).slice(0, 7);
     return recentClients.map(client => html`
       <div class="client-item" @click="${(e) => this.navigateToClientDetails(e, client)}">
         <div class="client-avatar"></div>
@@ -256,19 +269,8 @@ class Home extends ViewBase {
       </div>
     `);
   }
-
-  goToAbout(event) {
-    event.preventDefault();
-    router.navigate('/about');
-  }
-
-  logout(event) {
-    event.preventDefault();
-    router.navigate('/login');
-  }
 }
 
-// Register the Home component as 'my-home'
 customElements.define('my-home', Home);
 
 export default Home;

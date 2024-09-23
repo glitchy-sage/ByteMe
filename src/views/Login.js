@@ -7,38 +7,64 @@ class Login extends ViewBase {
   static styles = [
     sharedStyles,
     css`
-    :host {
-      display: block;
-      padding: 20px;
-      font-family: Arial, sans-serif;
-    }
+      :host {
+        display: block;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+      }
 
-    h2 {
-      margin-bottom: 20px;
-      font-size: 1.5rem;
-      color: #333;
-    }
+      .container {
+        max-width: 400px;
+        margin: 0 auto;
+      }
 
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-size: 0.9rem;
-      color: #333;
-    }
+      h2 {
+        margin-bottom: 20px;
+        font-size: 1.5rem;
+        color: #333;
+        text-align: center;
+      }
 
-    input[type="text"], input[type="password"] {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 20px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 1rem;
-      box-sizing: border-box;
-    }
-    .login-form {
-      width: 100%;
-    }
-    `
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 0.9rem;
+        color: #333;
+      }
+
+      input[type="text"],
+      input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 1rem;
+        box-sizing: border-box;
+      }
+
+      .login-form {
+        width: 100%;
+      }
+
+      button {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+        color: white;
+        background-color: #6c757d;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-bottom: 20px;
+      }
+
+      @media (max-width: 600px) {
+        .container {
+          padding: 0 20px;
+        }
+      }
+    `,
   ];
 
   render() {
@@ -54,7 +80,7 @@ class Login extends ViewBase {
           <label for="password">Password</label>
           <input type="password" id="password" name="password" />
 
-          <button type="submit" class="my-button">Login</button>
+          <button class="my-button" type="submit">Login</button>
         </form>
       </div>
     `;

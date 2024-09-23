@@ -37,6 +37,7 @@ class ClientSummary extends ViewBase {
         margin: 0 auto;
         padding: 20px;
         max-width: 1200px;
+        width: 100%;
       }
 
       .header {
@@ -66,6 +67,7 @@ class ClientSummary extends ViewBase {
         padding: 20px;
         border-radius: 8px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        flex-direction: column;
       }
 
       .profile-picture .placeholder {
@@ -76,12 +78,13 @@ class ClientSummary extends ViewBase {
         display: flex;
         justify-content: center;
         align-items: center;
-        margin-right: 20px;
+        margin-bottom: 20px;
       }
 
       .profile-details {
-        margin-left: 20px;
+        margin-left: 0;
         flex: 1;
+        width: 100%;
       }
 
       .profile-details h3 {
@@ -100,10 +103,12 @@ class ClientSummary extends ViewBase {
         display: flex;
         justify-content: space-between;
         margin: 5px 0;
+        flex-wrap: wrap;
       }
 
       .profile-details .detail-item strong {
         font-weight: 600;
+        flex: 1;
       }
 
       /* Documents Section */
@@ -192,8 +197,8 @@ class ClientSummary extends ViewBase {
         background-color: white;
         padding: 20px;
         border-radius: 8px;
-        width: 600px;
-        max-width: 90%;
+        width: 90%;
+        max-width: 600px;
         position: relative;
       }
 
@@ -214,7 +219,8 @@ class ClientSummary extends ViewBase {
         margin-top: 20px;
         border: 2px solid black;
         width: 100%;
-        height: 750px;
+        height: auto;
+        max-height: 750px;
       }
 
       .arrow-left,
@@ -246,6 +252,7 @@ class ClientSummary extends ViewBase {
         display: flex;
         justify-content: space-between;
         margin-top: 20px;
+        flex-wrap: wrap;
       }
 
       .button {
@@ -256,10 +263,39 @@ class ClientSummary extends ViewBase {
         border-radius: 20px;
         cursor: pointer;
         font-size: 11px;
+        margin-top: 10px;
       }
 
       .button.cancel {
         background-color: #D32F2F;
+      }
+
+      @media (min-width: 768px) {
+        .profile-section {
+          flex-direction: row;
+        }
+
+        .profile-picture {
+          margin-right: 20px;
+        }
+
+        .profile-details {
+          margin-left: 20px;
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .client-profile-container {
+          max-width: 1200px;
+        }
+
+        .arrow-left {
+          left: -80px;
+        }
+
+        .arrow-right {
+          right: -80px;
+        }
       }
     `
   ];

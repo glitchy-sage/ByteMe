@@ -1,83 +1,120 @@
 import { LitElement, html, css } from 'lit';
 import '/src/components/CollapseComponent.js';
-import { ViewBase } from '../ViewBase.js'; // Import the ViewBase class
+import { ViewBase } from '../ViewBase.js';
 import { sharedStyles } from '../../styles/shared-styles.js';
 
 class ClientDetails extends ViewBase {
   static styles = [
     sharedStyles,
     css`
-    :host {
-      display: block;
-      font-family: Arial, sans-serif;
-      padding: 50px;
-      max-width: 900px;
-      // margin: 0 auto;
-    }
+      :host {
+        display: block;
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        max-width: 900px;
+        margin: 0 auto;
+      }
 
-    h2 {
-      font-size: 1.5rem;
-      color: #333;
-      margin-bottom: 20px;
-    }
+      h2 {
+        font-size: 1.5rem;
+        color: #333;
+        margin-bottom: 20px;
+      }
 
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
 
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      color: #495057;
-      font-weight: 500;
-    }
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #495057;
+        font-weight: 500;
+      }
 
-    input, select {
-      width: auto;
-      padding: 0.375rem 0.75rem;
-      font-size: 1rem;
-      color: #495057;
-      background-color: #fff;
-      background-clip: padding-box;
-      border: 1px solid #ced4da;
-      border-radius: 0.25rem;
-    }
+      input,
+      select {
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        box-sizing: border-box;
+      }
 
-    button {
-      padding: 0.375rem 0.75rem;
-      font-size: 1rem;
-      border-radius: 0.25rem;
-    }
-    
-    .form-inline {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+      button {
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        color: white;
+        background-color: #6c757d;
+        border: none;
+      }
 
-    .content-group {
-      background-color: #f8f9fa;
-      padding: 10px;
-      border-radius: 5px;
-      margin-bottom: 15px;
-    }
-    
-    .btn-group {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 20px;
-    }
-    .back-button {
-      border: 0px;
-      background-color: transparent;
-    }
-    .row{
+      .form-inline {
         display: flex;
-    justify-content: space-evenly;}
-  `];
+        align-items: center;
+        gap: 10px;
+      }
+
+      .content-group {
+        background-color: #f8f9fa;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+      }
+
+      .btn-group {
+        display: flex;
+        justify-content: space-between;
+        margin
+      .btn-group {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+      }
+
+      .back-button {
+        border: 0px;
+        background-color: transparent;
+        cursor: pointer;
+        font-size: 1.2rem;
+      }
+
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+
+      .col-md-6 {
+        flex: 1 1 calc(50% - 20px);
+      }
+
+      @media (max-width: 768px) {
+        .col-md-6 {
+          flex: 1 1 100%;
+        }
+
+        .btn-group {
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .row {
+          flex-direction: column;
+          gap: 10px;
+        }
+      }
+    `,
+  ];
 
   static properties = {
-    clientName: { type: String }
+    clientName: { type: String },
   };
 
   constructor() {

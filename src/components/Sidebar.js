@@ -5,7 +5,7 @@ class Sidebar extends LitElement {
   static styles = css`
     :host {
       display: block;
-      width: 80px;
+      width: 85px;
       height: 100vh;
       background-color: #f9f1f8;
       padding: 20px 10px;
@@ -14,6 +14,12 @@ class Sidebar extends LitElement {
       left: 0;
       top: 0;
       z-index: 1000;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .sidebar-container {
+      display: grid;
+      justify-content: center;
     }
 
     .menu-toggle {
@@ -57,7 +63,7 @@ class Sidebar extends LitElement {
     }
 
     .menu-item-label {
-      font-size: 12px;
+      font-size: 14px;
     }
 
     .new-client-button {
@@ -77,57 +83,94 @@ class Sidebar extends LitElement {
       background-color: #ffb5ba;
     }
 
-    /* Icons as placeholder text for now; replace with real icons */
-    .icon {
-      font-size: 24px;
-      color: #5e3c87;
-    }
-    .sidebar-container {
-    display: grid;
-    justify-content: center;
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      :host {
+        width: 80px;
+        transform: translateX(-100%);
+      }
+
+      .menu-toggle {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        z-index: 1001;
+        display: block;
+      }
+
+      .sidebar-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .menu-item-label {
+        display: none;
+      }
+
+      .menu-item-icon {
+        width: 40px;
+        height: 40px;
+      }
+
+      :host([active]) {
+        transform: translateX(0);
+      }
     }
   `;
 
-  // Event handlers for navigation
+  static properties = {
+    active: { type: Boolean, reflect: true }
+  };
+
+  constructor() {
+    super();
+    this.active = false;
+  }
+
+  toggleSidebar() {
+    this.active = !this.active;
+  }
+
   goToClients() {
     console.log('Navigating to Clients');
     router.navigate('/list');
-    // Add your navigation logic here
+    this.toggleSidebar(); // Close sidebar on mobile after navigation
   }
 
   goToDocuments() {
     console.log('Navigating to Notes');
     router.navigate('/about');
-
-    // Add your navigation logic here
+    this.toggleSidebar(); // Close sidebar on mobile after navigation
   }
 
   goToHome() {
     console.log('Navigating to Settings');
     router.navigate('/home');
-    // Add your navigation logic here
+    this.toggleSidebar(); // Close sidebar on mobile after navigation
   }
 
   goToLogin() {
     console.log('Adding New Client');
     router.navigate('/login');
-    // Add your logic to add a new client here
+    this.toggleSidebar(); // Close sidebar on mobile after navigation
   }
 
   addNewClient() {
     router.navigate('/summary');
+    this.toggleSidebar(); // Close sidebar on mobile after navigation
   }
 
   render() {
     return html`
       <div class="sidebar-container">
+        <span class="menu-toggle" @click="${this.toggleSidebar}">☰</span>
         <!-- New Client Button -->
-        <button class="menu-item new-client-button " @click="${this.addNewClient}">
-          <div class="menu-item-icon">
+        <button class="menu-item new-client-button" @click="${this.addNewClient}">
+          <div>
             <span class="icon">+</span>
           </div>
-          <div class="menu-item-label">New Client</div>
-          </button>
+        </button>
 
         <!-- Sidebar Menu Items -->
         <button class="menu-item active" @click="${this.goToClients}">
