@@ -2,6 +2,7 @@ import { LitElement, css, html } from 'lit';
 import { router } from '../Routing';
 import { sharedStyles } from '/src/styles/shared-styles';
 import { ViewBase } from './ViewBase.js';
+import { loginCredentials } from '/src/constants/LoginCredentials'
 
 class Login extends ViewBase {
   static styles = [
@@ -67,6 +68,10 @@ class Login extends ViewBase {
     `,
   ];
 
+  static properties = {
+    clientName: { type: String }
+  };
+
   render() {
     return html`
       <div class="container">
@@ -86,21 +91,38 @@ class Login extends ViewBase {
     `;
   }
 
-  handleLogin(event) {
+  async getHashedPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hash = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  async handleLogin(event) {
     event.preventDefault();
 
-    const username = this.shadowRoot.getElementById('username').value;
-    const password = this.shadowRoot.getElementById('password').value;
+    // Get the username and password entered by the user
+    const enteredUsername = this.shadowRoot.getElementById('username').value;
+    const enteredPassword = this.shadowRoot.getElementById('password').value;
 
-    if (!username || !password) {
-      alert('Please fill in both the username and password fields.');
+    // Find the user in the loginCredentials array
+    const user = loginCredentials.find(user => user.username === enteredUsername);
+
+    if (!user) {
+      // If the user is not found, show an error
+      alert('Username not found.');
       return;
     }
 
-    if (password === 'pass') {
+    let hashedPassword = await this.getHashedPassword(enteredPassword);
+    console.log(hashedPassword)
+    console.log(user.password)
+    if (user.password === hashedPassword) {
+      // Passwords match, proceed to login
       router.navigate('/home');
     } else {
-      alert('Incorrect password. Please try again.');
+      // Passwords do not match
+      alert('Incorrect password.');
     }
   }
 }
