@@ -6,6 +6,7 @@ import './views/About.js';  // Import About component
 import './views/client/ClientSummary.js';  // Import client summary component
 import './views/client/ClientDetails.js';  // Import client details component
 import './views/client/ClientList.js';  // Import client list component
+import './views/pipedrive/Dashboard.js';  // Import pipedrive dashboard component
 
 export class Routing {
   constructor() {
@@ -17,6 +18,7 @@ export class Routing {
       '/summary': () => html`<my-summary></my-summary>`,
       '/client': () => html`<my-client></my-client>`,
       '/list': () => html`<my-list></my-list>`,
+      '/dashboard': () => html`<my-dashboard></my-dashboard>`,
     };
 
     window.addEventListener('popstate', () => {
