@@ -241,14 +241,13 @@ class Home extends LitElement {
     canvas.height = this.shadowRoot.querySelector('.header-image').clientHeight;
 
     for (let i = 0; i < numStars; i++) {
-        const color = Math.random() > 0.5 ? 'white' : 'blue'; // 50% chance for blue or white stars
         stars.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
             radius: Math.random() * 2 + 1,
             dx: Math.random() * 0.5 - 0.25,
             dy: Math.random() * 0.5 - 0.25,
-            color: color
+            color: '#ADD8E6' // Light blue color for the dots
         });
     }
 
@@ -270,7 +269,43 @@ class Home extends LitElement {
         ctx.textBaseline = 'middle';
         ctx.fillText('ByteMe', canvas.width / 2, canvas.height / 2);
 
+        drawConnections();
         updateStars();
+    }
+
+    function drawConnections() {
+        for (let i = 0; i < numStars; i++) {
+            const star1 = stars[i];
+            const closestStars = findClosestStars(star1, stars, 3);
+
+            if (closestStars.length >= 3) {
+                ctx.beginPath();
+                ctx.moveTo(star1.x, star1.y);
+                ctx.lineTo(closestStars[0].x, closestStars[0].y);
+                ctx.lineTo(closestStars[1].x, closestStars[1].y);
+                ctx.lineTo(star1.x, star1.y);
+                ctx.strokeStyle = '#7DF9FF'; // Electric blue color for the lines
+                ctx.stroke();
+            }
+        }
+    }
+
+    function findClosestStars(star, stars, numClosest) {
+        const distances = stars.map(otherStar => {
+            if (otherStar !== star) {
+                const dx = star.x - otherStar.x;
+                const dy = star.y - otherStar.y;
+                return {
+                    star: otherStar,
+                    distance: Math.sqrt(dx * dx + dy * dy)
+                };
+            }
+            return null;
+        }).filter(Boolean);
+
+        distances.sort((a, b) => a.distance - b.distance);
+
+        return distances.slice(0, numClosest).map(d => d.star);
     }
 
     function updateStars() {
