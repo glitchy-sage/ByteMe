@@ -3,6 +3,7 @@ import { router } from '../Routing';
 import { sharedStyles } from '/src/styles/shared-styles';  
 import { store } from '/src/Store';
 import { clients } from '/src/constants/ClientList';
+import { ClientProfileService } from '/src/services/ClientProfileService';
 
 class Home extends LitElement {
 
@@ -42,7 +43,6 @@ class Home extends LitElement {
       .header-image {
         width: 100%;
         height: 200px;
-        background-image: url("/src/images/avatar.png");
         background-size: cover;
         background-position: center;
         border-radius: 10px;
@@ -177,10 +177,21 @@ class Home extends LitElement {
 
   constructor() {
     super();
+    this.clientList = [];
     this.initialise();
   }
-
-  initialise() {}
+  
+  async initialise() {
+    try {
+      const clientProfileService = new ClientProfileService();
+      let clientList = await clientProfileService.getAllClients();
+      this.clientList = clientList.length > 0 ? clientList : clients;
+      console.log('Client list initialized:', this.clientList); // For debugging purposes
+      this.requestUpdate(); // To re-render the component with the updated client list
+    } catch (error) {
+      console.error('Failed to initialize client list', error);
+    }
+  }
 
   firstUpdated() {
     this.addEnterKeyListener();
@@ -264,7 +275,7 @@ class Home extends LitElement {
   }
 
   renderRecentClients() {
-    const recentClients = [...clients].sort((a, b) => new Date(b.lastInteractionDate) - new Date(a.lastInteractionDate)).slice(0, 7);
+    const recentClients = [...this.clientList].sort((a, b) => new Date(b.lastInteractionDate) - new Date(a.lastInteractionDate)).slice(0, 7);
     return recentClients.map(client => html`
       <div class="client-item" @click="${(e) => this.navigateToClientDetails(e, client)}">
         <div class="client-avatar"></div>

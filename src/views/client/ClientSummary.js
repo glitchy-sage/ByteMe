@@ -607,7 +607,7 @@ class ClientSummary extends ViewBase {
         <div class="popup-overlay ${this.showPopup ? 'show' : ''}">
           <div class="popup-content">
             <button class="close-button" @click="${this.togglePopup}">✖</button>
-            <h3>Select template PDF to populate with information for ${this.clientInfo.firstName} ${this.clientInfo.surname}</h3>
+            <h3>Select template PDF for ${this.clientInfo.firstName} ${this.clientInfo.surname}</h3>
             <span class="arrow-left" @click="${() => this.switchPDF(-1)}">←</span>
             <span class="arrow-right" @click="${() => this.switchPDF(1)}">→</span>
             <canvas id="pdfCanvas"></canvas>
