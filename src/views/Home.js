@@ -1,6 +1,6 @@
 import { html, LitElement, css } from 'lit';
 import { router } from '../Routing';
-import { sharedStyles } from '/src/styles/shared-styles';  
+import { sharedStyles } from '/src/styles/shared-styles';
 import { store } from '/src/Store';
 import { clients } from '/src/constants/ClientList';
 import { ClientProfileService } from '/src/services/ClientProfileService';
@@ -171,16 +171,26 @@ class Home extends LitElement {
           width: 100%;
           height: 100%;
         }
+        .myCanvas {
+          height: 400px;
+          width: 400px;
+          background: blue;  
+          margin-top: 20px;
+          border: 2px solid black;
+          width: 100%;
+          height: auto;
+          max-height: 750px;
+        }
       }
     `
   ];
 
   constructor() {
     super();
-    this.clientList = [];
+    this.clientList = clients;
     this.initialise();
   }
-  
+
   async initialise() {
     try {
       const clientProfileService = new ClientProfileService();
@@ -236,6 +246,7 @@ class Home extends LitElement {
           <div class="background-image">
             <h3>Background placeholder</h3>
           </div>
+          <canvas class="myCanvas" id="canvas"></canvas>
           <div class="header-buttons">
             <button class="my-button" @click="${() => router.navigate('/list')}">View all clients</button>
             <button class="my-button" @click="${() => router.navigate('/dashboard')}">Dashboard</button>
