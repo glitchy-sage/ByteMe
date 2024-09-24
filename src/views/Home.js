@@ -129,6 +129,7 @@ class Home extends LitElement {
         text-align: center;
         width: 100px;
         margin-bottom: 20px;
+        cursor: pointer;
       }
 
       .client-avatar, .document-icon {

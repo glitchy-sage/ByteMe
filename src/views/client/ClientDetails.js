@@ -11,7 +11,8 @@ class ClientDetails extends ViewBase {
         display: block;
         font-family: Arial, sans-serif;
         padding: 20px;
-        max-width: 900px;
+        overflow: auto;
+        max-height: 840px;
         margin: 0 auto;
       }
 
@@ -50,7 +51,6 @@ class ClientDetails extends ViewBase {
         font-size: 1rem;
         border-radius: 0.25rem;
         cursor: pointer;
-        // color: white;
         background-color: #6c757d;
         border: none;
       }
@@ -69,11 +69,7 @@ class ClientDetails extends ViewBase {
       }
 
       .btn-group {
-        display: flex;
-        justify-content: space-between;
-        margin
-      .btn-group {
-        display: flex;
+        display: none;
         justify-content: space-between;
         margin-top: 20px;
       }
@@ -115,17 +111,33 @@ class ClientDetails extends ViewBase {
 
   static properties = {
     clientName: { type: String },
+    changesMade: { type: Boolean }
   };
 
   constructor() {
     super();
     this.clientName = '';
+    this.changesMade = false;
   }
 
   connectedCallback() {
     super.connectedCallback();
     const urlParams = new URLSearchParams(window.location.search);
     this.clientName = urlParams.get('client');
+  }
+
+  firstUpdated() {
+    // Listen for changes in the input fields
+    const inputs = this.shadowRoot.querySelectorAll('input, select');
+    inputs.forEach(input => {
+      input.addEventListener('input', () => this.handleInputChange());
+    });
+  }
+
+  handleInputChange() {
+    this.changesMade = true;
+    const btnGroup = this.shadowRoot.querySelector('.btn-group');
+    btnGroup.style.display = 'flex';
   }
 
   render() {

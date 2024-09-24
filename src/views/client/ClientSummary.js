@@ -37,6 +37,7 @@ class ClientSummary extends ViewBase {
         margin: 0 auto;
         padding: 20px;
         max-width: 1200px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       }
 
       .header {
@@ -60,7 +61,7 @@ class ClientSummary extends ViewBase {
 
       .profile-section {
         display: flex;
-        align-items: flex-start;
+        align-items: end;
         margin-bottom: 40px;
         background-color: #fff;
         padding: 20px;
@@ -81,36 +82,32 @@ class ClientSummary extends ViewBase {
       }
 
       .profile-details {
-        margin-left: 0;
+        display: flex;
+        flex-wrap: wrap;
+        margin-left: 20px;
         flex: 1;
-        width: 100%;
       }
 
       .profile-details h3 {
+        width: 100%;
         margin: 0 0 10px;
         font-size: 22px;
         color: #333;
       }
 
-      .profile-details p {
-        margin: 5px 0;
-        font-size: 16px;
-        color: #555;
-      }
-
       .profile-details .detail-item {
-        display: flex;
         justify-content: space-between;
         margin: 5px 0;
+        width: 45%;
         flex-wrap: wrap;
       }
 
       .profile-details .detail-item strong {
         font-weight: 600;
-        flex: 1;
+        margin-right: 10px;
       }
 
-      /* Documents Section */
+       /* Documents Section */
       .documents-section {
         margin-top: 30px;
       }
@@ -140,8 +137,12 @@ class ClientSummary extends ViewBase {
       .document-item {
         display: flex;
         align-items: center;
-        padding: 10px 0;
-        border-bottom: 1px solid #e0e0e0;
+        padding: 10px;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        margin: 10px 0px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
       }
 
       .document-icon .icon-placeholder {
@@ -169,10 +170,6 @@ class ClientSummary extends ViewBase {
         background-color: green;
         border-radius: 50%;
         margin-left: 10px;
-      }
-
-      .document-item:hover {
-        cursor: pointer;
       }
 
       /* Popup Styles */
@@ -220,11 +217,6 @@ class ClientSummary extends ViewBase {
         width: 100%;
         height: auto;
         max-height: 750px;
-      }
-      @media (max-width: 768px) {
-      #pdfCanvas {
-        max-height: 300px;
-        max-width: 200px;
       }
 
       .arrow-left,
@@ -291,6 +283,7 @@ class ClientSummary extends ViewBase {
       @media (min-width: 1024px) {
         .client-profile-container {
           max-width: 1200px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .arrow-left {
@@ -569,8 +562,8 @@ class ClientSummary extends ViewBase {
               <strong>Last interaction date:</strong>
               <span>${this.clientInfo.lastInteractionDate}</span>
             </div>
+            </div>
             <button class="my-button" @click="${(e) => this.goToMore(e)}">View More</button>
-          </div>
         </div>
 
         <!-- Documents Section -->
