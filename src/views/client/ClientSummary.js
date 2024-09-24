@@ -384,7 +384,12 @@ class ClientSummary extends ViewBase {
   }
 
   togglePopup() {
-    this.showPopup = !this.showPopup;
+    const isMobile = window.innerWidth <= 600;
+    if (!isMobile) {
+      this.showPopup = !this.showPopup;
+    } else {
+      alert('PDF Viewer is not yet available on mobile.');
+    }
   }
 
   base64ToArrayBuffer(base64) {
@@ -501,6 +506,25 @@ class ClientSummary extends ViewBase {
     });
   }
 
+  firstUpdated() {
+    this.checkIfMobile();
+    window.addEventListener('resize', () => this.checkIfMobile());
+  }
+
+  checkIfMobile() {
+    const pdfButton = this.shadowRoot.getElementById('pdfButton');
+    const isMobile = window.innerWidth <= 600;
+
+    if (isMobile) {
+      pdfButton.disabled = true;
+      pdfButton.style.backgroundColor = '#ccc';
+      pdfButton.style.cursor = 'not-allowed';
+    } else {
+      pdfButton.disabled = false;
+      pdfButton.style.cursor = 'pointer';
+    }
+  }
+
   render() {
     return html`
       <div class="client-profile-container">
@@ -556,7 +580,7 @@ class ClientSummary extends ViewBase {
           </div>
 
           <div class="document-list">
-            <div class="document-item" @click="${this.togglePopup}">
+            <div class="document-item" id="pdfButton" @click="${this.togglePopup}">
               <div class="document-icon">
                 <div class="icon-placeholder"></div>
               </div>

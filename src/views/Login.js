@@ -88,21 +88,21 @@ class Login extends ViewBase {
 
   handleLogin(event) {
     event.preventDefault();
-  
+
     const username = this.shadowRoot.getElementById('username').value;
     const password = this.shadowRoot.getElementById('password').value;
-  
+
     if (!username || !password) {
       alert('Please fill in both the username and password fields.');
       return;
     }
-  
+
     if (password === 'pass') {
       router.navigate('/home');
     } else {
       alert('Incorrect password. Please try again.');
     }
   }
-  }
+}
 
 customElements.define('my-login', Login);

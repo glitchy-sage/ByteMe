@@ -159,10 +159,16 @@ class Home extends LitElement {
           align-items: center;
           gap: 10px;
           margin-top: 10px;
+          position: absolute;
         }
 
         .client-buttons {
           flex-direction: column;
+        }
+        .background-image {
+          position: absolute;
+          width: 100%;
+          height: 100%;
         }
       }
     `
@@ -215,6 +221,9 @@ class Home extends LitElement {
       <h2>Byte Me</h2>
         <!-- Grey Image with Buttons -->
         <div class="header-image">
+          <div class="background-image">
+            <h3>Background placeholder</h3>
+          </div>
           <div class="header-buttons">
             <button class="my-button" @click="${() => router.navigate('/list')}">View all clients</button>
             <button class="my-button" @click="${() => router.navigate('/dashboard')}">Dashboard</button>

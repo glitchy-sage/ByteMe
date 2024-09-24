@@ -17,7 +17,7 @@ export const sharedStyles = css`
       border: none;
       border-radius: 20px;
       cursor: pointer;
-      font-size: 1rem;
+      font-size: 12px;
     }
 
     .my-button:hover {
