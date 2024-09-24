@@ -151,9 +151,7 @@ class Home extends LitElement {
 
       @media (max-width: 768px) {
         .header-image {
-          flex-direction: column;
-          height: auto;
-          padding: 20px 10px;
+          height: 120px;
         }
 
         .header-buttons {
@@ -175,15 +173,9 @@ class Home extends LitElement {
         }
 
         .myCanvas {
-          height: 400px;
-          width: 400px;
-          background: blue;  
-          margin-top: 20px;
-          border: 2px solid black;
-          width: 100%;
-          height: auto;
-          max-height: 750px;
-        }
+    height: 100px;
+    width: 610px;
+            }
       }
 
       .myCanvas {
@@ -241,13 +233,14 @@ class Home extends LitElement {
     canvas.height = this.shadowRoot.querySelector('.header-image').clientHeight;
 
     for (let i = 0; i < numStars; i++) {
+        const color = Math.random() > 0.5 ? '#ADD8E6' : 'white'; // 50% chance for light blue or white dots
         stars.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
             radius: Math.random() * 2 + 1,
-            dx: Math.random() * 0.5 - 0.25,
-            dy: Math.random() * 0.5 - 0.25,
-            color: '#ADD8E6' // Light blue color for the dots
+            dx: Math.random() * 0.2 - 0.1, // Slower movement speed
+            dy: Math.random() * 0.2 - 0.1, // Slower movement speed
+            color: color
         });
     }
 
