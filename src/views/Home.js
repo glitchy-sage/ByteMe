@@ -50,7 +50,6 @@ class Home extends LitElement {
         position: relative;
         display: flex;
         align-items: flex-end;
-        padding: 20px;
         justify-content: space-between;
       }
 
@@ -62,11 +61,7 @@ class Home extends LitElement {
       .header-buttons button {
         padding: 10px 20px;
         font-size: 0.9rem;
-        // border: none;
-        // border-radius: 5px;
         cursor: pointer;
-        // color: white;
-        // background-color: #6c757d; /* Button color */
       }
 
       h2 {
@@ -102,6 +97,8 @@ class Home extends LitElement {
         border: 1px solid #ccc;
         border-radius: 5px;
         font-size: 1rem;
+        margin-left: -3px;
+        margin-top: 5px;
       }
 
       .client-buttons {
@@ -115,11 +112,7 @@ class Home extends LitElement {
         flex: 1;
         padding: 10px;
         font-size: 1rem;
-        // border: none;
-        // border-radius: 5px;
         cursor: pointer;
-        // background-color: #6c757d; /* Button color */
-        // color: white;
       }
 
       .recent-clients, .documents {
@@ -251,7 +244,7 @@ class Home extends LitElement {
 
         <!-- Recent Clients Section -->
         <div class="section-title">
-          <h3>Recent clients (10 of 50)</h3>
+          <h3>Recent clients (7 of 50)</h3>
         </div>
         <div class="recent-clients">
           ${this.renderRecentClients()}

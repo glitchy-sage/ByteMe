@@ -85,7 +85,6 @@ class ClientList extends ViewBase {
       .header {
         display: flex;
         align-items: center;
-        justify-content: space-between;
         margin-bottom: 20px;
       }
 

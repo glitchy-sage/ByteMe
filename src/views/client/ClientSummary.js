@@ -37,7 +37,6 @@ class ClientSummary extends ViewBase {
         margin: 0 auto;
         padding: 20px;
         max-width: 1200px;
-        width: 100%;
       }
 
       .header {
@@ -221,6 +220,11 @@ class ClientSummary extends ViewBase {
         width: 100%;
         height: auto;
         max-height: 750px;
+      }
+      @media (max-width: 768px) {
+      #pdfCanvas {
+        max-height: 300px;
+        max-width: 200px;
       }
 
       .arrow-left,
@@ -541,7 +545,7 @@ class ClientSummary extends ViewBase {
               <strong>Last interaction date:</strong>
               <span>${this.clientInfo.lastInteractionDate}</span>
             </div>
-            <button class="button" @click="${(e) => this.goToMore(e)}">View More</button>
+            <button class="my-button" @click="${(e) => this.goToMore(e)}">View More</button>
           </div>
         </div>
 
@@ -591,11 +595,11 @@ class ClientSummary extends ViewBase {
             <span class="arrow-right" @click="${() => this.switchPDF(1)}">→</span>
             <canvas id="pdfCanvas"></canvas>
             <div class="footer">
-              <button class="button" @click="${() => this.changePage(-1)}">Previous Page</button>
-              <button class="button" @click="${() => this.changePage(1)}">Next Page</button>
-              <button class="button" @click="${() => this.changePage(1)}">Download</button>
-              <button class="button" @click="${this.handleSelectTemplate}">Select template</button>
-              <button class="button cancel" @click="${this.clearTemplate}">Clear Template</button>
+              <button class="my-button" @click="${() => this.changePage(-1)}">Previous Page</button>
+              <button class="my-button" @click="${() => this.changePage(1)}">Next Page</button>
+              <button class="my-button" @click="${() => this.changePage(1)}">Download</button>
+              <button class="my-button" @click="${this.handleSelectTemplate}">Select template</button>
+              <button class="my-button cancel" @click="${this.clearTemplate}">Clear Template</button>
             </div>
           </div>
         </div>

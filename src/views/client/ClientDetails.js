@@ -50,7 +50,7 @@ class ClientDetails extends ViewBase {
         font-size: 1rem;
         border-radius: 0.25rem;
         cursor: pointer;
-        color: white;
+        // color: white;
         background-color: #6c757d;
         border: none;
       }
