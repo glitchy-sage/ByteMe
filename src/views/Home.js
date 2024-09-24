@@ -51,6 +51,7 @@ class Home extends LitElement {
         display: flex;
         align-items: flex-end;
         justify-content: space-between;
+        background-color: black;
       }
 
       .header-buttons {
@@ -166,11 +167,13 @@ class Home extends LitElement {
         .client-buttons {
           flex-direction: column;
         }
+
         .background-image {
           position: absolute;
           width: 100%;
           height: 100%;
         }
+
         .myCanvas {
           height: 400px;
           width: 400px;
@@ -181,6 +184,14 @@ class Home extends LitElement {
           height: auto;
           max-height: 750px;
         }
+      }
+
+      .myCanvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        pointer-events: none;
       }
     `
   ];
@@ -204,7 +215,9 @@ class Home extends LitElement {
   }
 
   firstUpdated() {
+    super.firstUpdated();
     this.addEnterKeyListener();
+    this.initCanvas();
   }
 
   addEnterKeyListener() {
@@ -215,6 +228,97 @@ class Home extends LitElement {
       }
     });
   }
+
+  initCanvas() {
+    const canvas = this.shadowRoot.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    const stars = [];
+    const numStars = 100;
+
+    // Set canvas size
+    canvas.width = this.shadowRoot.querySelector('.header-image').clientWidth;
+    canvas.height = this.shadowRoot.querySelector('.header-image').clientHeight;
+
+    for (let i = 0; i < numStars; i++) {
+        const color = Math.random() > 0.5 ? 'white' : 'blue'; // 50% chance for blue or white stars
+        stars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            radius: Math.random() * 2 + 1,
+            dx: Math.random() * 0.5 - 0.25,
+            dy: Math.random() * 0.5 - 0.25,
+            color: color
+        });
+    }
+
+    function drawStars() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.beginPath();
+        for (let i = 0; i < numStars; i++) {
+            const star = stars[i];
+            ctx.fillStyle = star.color;
+            ctx.moveTo(star.x, star.y);
+            ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        }
+        ctx.fill();
+
+        // Draw the label "ByteMe" in the middle of the canvas
+        ctx.fillStyle = 'white';
+        ctx.font = '40px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('ByteMe', canvas.width / 2, canvas.height / 2);
+
+        updateStars();
+    }
+
+    function updateStars() {
+        for (let i = 0; i < numStars; i++) {
+            const star = stars[i];
+            star.x += star.dx;
+            star.y += star.dy;
+
+            // Reflect stars off the canvas edges
+            if (star.x < 0 || star.x > canvas.width) star.dx = -star.dx;
+            if (star.y < 0 || star.y > canvas.height) star.dy = -star.dy;
+        }
+    }
+
+    function animate() {
+        drawStars();
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    canvas.addEventListener('mousemove', (event) => {
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = event.clientX - rect.left;
+        const mouseY = event.clientY - rect.top;
+
+        for (let i = 0; i < numStars; i++) {
+            const star = stars[i];
+            const dx = star.x - mouseX;
+            const dy = star.y - mouseY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            // Push stars away from the cursor
+            if (distance < 100) {
+                const angle = Math.atan2(dy, dx);
+                const force = (100 - distance) / 100; // Closer stars are pushed more
+                star.dx += Math.cos(angle) * force * 2;
+                star.dy += Math.sin(angle) * force * 2;
+            }
+        }
+    });
+
+    // Adjust canvas size on window resize
+    window.addEventListener('resize', () => {
+        canvas.width = this.shadowRoot.querySelector('.header-image').clientWidth;
+        canvas.height = this.shadowRoot.querySelector('.header-image').clientHeight;
+    });
+}
 
   navigateToClientDetails(event, client) {
     event.preventDefault();
@@ -240,19 +344,10 @@ class Home extends LitElement {
   render() {
     return html`
       <div class="home-container">
-      <h2>Byte Me</h2>
-        <!-- Grey Image with Buttons -->
         <div class="header-image">
-          <div class="background-image">
-            <h3>Background placeholder</h3>
-          </div>
-          <canvas class="myCanvas" id="canvas"></canvas>
-          <div class="header-buttons">
-            <button class="my-button" @click="${() => router.navigate('/list')}">View all clients</button>
-            <button class="my-button" @click="${() => router.navigate('/dashboard')}">Dashboard</button>
-          </div>
+          <canvas class="myCanvas" id="canvas">
+          </canvas>
         </div>
-
         <!-- Search Client Section -->
         <div class="header">
           <h3>Search client</h3>
@@ -281,6 +376,11 @@ class Home extends LitElement {
         <div class="recent-clients">
           ${this.renderRecentClients()}
         </div>
+                <div class="header-buttons">
+          <button class="my-button" @click="${() => router.navigate('/list')}">View all clients</button>
+          <button class="my-button" @click="${() => router.navigate('/dashboard')}">Dashboard</button>
+        </div>
+
       </div>
     `;
   }
