@@ -89,19 +89,6 @@ class ClientList extends ViewBase {
       }
 
       @media (max-width: 768px) {
-        .client-card {
-          flex-direction: column;
-          text-align: center;
-        }
-
-        .client-image {
-          margin-bottom: 10px;
-        }
-
-        .header {
-          flex-direction: column;
-          align-items: flex-start;
-        }
       }
     `,
   ];

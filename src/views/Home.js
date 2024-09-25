@@ -153,15 +153,6 @@ class Home extends LitElement {
         .header-image {
           height: 120px;
         }
-
-        .header-buttons {
-          flex-direction: column;
-          align-items: center;
-          gap: 10px;
-          margin-top: 10px;
-          position: absolute;
-        }
-
         .client-buttons {
           flex-direction: column;
         }
@@ -171,11 +162,6 @@ class Home extends LitElement {
           width: 100%;
           height: 100%;
         }
-
-        .myCanvas {
-    height: 100px;
-    width: 610px;
-            }
       }
 
       .myCanvas {
@@ -199,7 +185,6 @@ class Home extends LitElement {
       const clientProfileService = new ClientProfileService();
       let clientList = await clientProfileService.getAllClients();
       this.clientList = clientList.length > 0 ? clientList : clients;
-      console.log('Client list initialized:', this.clientList); // For debugging purposes
       this.requestUpdate(); // To re-render the component with the updated client list
     } catch (error) {
       console.error('Failed to initialize client list', error);
@@ -238,8 +223,8 @@ class Home extends LitElement {
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
             radius: Math.random() * 2 + 1,
-            dx: Math.random() * 0.2 - 0.1, // Slower movement speed
-            dy: Math.random() * 0.2 - 0.1, // Slower movement speed
+            dx: Math.random() * 1 - 0.5, // Slower movement speed
+            dy: Math.random() * 1 - 0.5, // Slower movement speed
             color: color
         });
     }
