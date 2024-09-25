@@ -1,11 +1,13 @@
 import { html, LitElement, css } from 'lit';
 import { sharedStyles } from '/src/styles/shared-styles'; // Assuming you have shared styles
+import { ViewBase } from '../ViewBase';
 
-class Dashboard extends LitElement {
-  
+class Dashboard extends ViewBase {
+
   static properties = {
     columns: { type: Object },
-    draggedCard: { type: Object }
+    draggedCard: { type: Object },
+    dragOverElement: { type: Object }
   };
 
   static styles = [
@@ -26,6 +28,7 @@ class Dashboard extends LitElement {
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         min-height: 400px;
         margin: 5px;
+        padding-bottom: 50px;
       }
 
       .card {
@@ -40,6 +43,13 @@ class Dashboard extends LitElement {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        position: relative;
+        z-index: 1;
+      }
+
+      .card.dragging {
+        opacity: 0.8;
+        z-index: 10;
       }
 
       .card-header {
@@ -94,11 +104,16 @@ class Dashboard extends LitElement {
     };
 
     this.draggedCard = null;  // Store the card being dragged
+    this.dragOverElement = null; // Track the element currently being dragged over
   }
 
   firstUpdated() {
     super.firstUpdated();
     this.addEventListeners();
+  }
+
+  updated() {
+    this.addEventListeners(); // Re-attach event listeners after every render
   }
 
   addEventListeners() {
@@ -125,16 +140,35 @@ class Dashboard extends LitElement {
 
   handleDragStart(event) {
     this.draggedCard = event.target;
-    event.target.style.opacity = 0.5;
+    this.draggedCard.classList.add('dragging');
+    event.target.style.opacity = 0.8;
   }
 
   handleDragEnd(event) {
-    event.target.style.opacity = '';
-    this.draggedCard = null;
+    if (this.draggedCard) {
+      this.draggedCard.classList.remove('dragging');
+      this.draggedCard.style.opacity = '';
+      this.draggedCard = null;
+      this.dragOverElement = null;
+    }
   }
 
   handleDragOver(event) {
     event.preventDefault();
+    const targetCard = event.target.closest('.card');
+    if (this.draggedCard && targetCard && targetCard !== this.draggedCard) {
+      this.dragOverElement = targetCard;
+      const targetColumn = targetCard.closest('.column');
+      if (targetColumn && this.draggedCard.closest('.column') === targetColumn) {
+        // Move the dragged card in the same column
+        const targetRect = targetCard.getBoundingClientRect();
+        const nextSibling = (event.clientY - targetRect.top > targetRect.height / 2)
+          ? targetCard.nextElementSibling : targetCard;
+        if (nextSibling && nextSibling !== this.draggedCard) {
+          targetColumn.insertBefore(this.draggedCard, nextSibling);
+        }
+      }
+    }
   }
 
   handleDrop(event) {
@@ -142,7 +176,7 @@ class Dashboard extends LitElement {
     const targetColumn = event.target.closest('.column');
     if (targetColumn && this.draggedCard) {
       const sourceColumn = this.draggedCard.closest('.column');
-      if (targetColumn !== sourceColumn) {
+      if (targetColumn && sourceColumn && targetColumn !== sourceColumn) {
         const sourceColumnId = sourceColumn.dataset.columnId;
         const targetColumnId = targetColumn.dataset.columnId;
 
@@ -157,28 +191,35 @@ class Dashboard extends LitElement {
         this.requestUpdate(); // LitElement's method to update the UI
       }
     }
+    this.handleDragEnd();
   }
 
   handleTouchStart(event) {
     this.touchStartX = event.touches[0].clientX;
     this.touchStartY = event.touches[0].clientY;
     this.draggedCard = event.target;
-    event.target.style.opacity = 0.5;
+    this.draggedCard.classList.add('dragging');
+    event.target.style.opacity = 0.8;
   }
 
   handleTouchMove(event) {
     const touch = event.touches[0];
-    this.draggedCard.style.position = 'absolute';
-    this.draggedCard.style.left = `${touch.clientX - this.touchStartX + this.draggedCard.offsetLeft}px`;
-    this.draggedCard.style.top = `${touch.clientY - this.touchStartY + this.draggedCard.offsetTop}px`;
-    this.draggedCard.style.zIndex = 1000;
+    if (this.draggedCard) {
+      this.draggedCard.style.position = 'absolute';
+      this.draggedCard.style.left = `${touch.clientX - this.touchStartX + this.draggedCard.offsetLeft}px`;
+      this.draggedCard.style.top = `${touch.clientY - this.touchStartY + this.draggedCard.offsetTop}px`;
+      this.draggedCard.style.zIndex = 1000;
+    }
   }
 
   handleTouchEnd(event) {
-    this.draggedCard.style.opacity = '';
-    this.draggedCard.style.position = '';
-    this.draggedCard.style.zIndex = '';
-    this.draggedCard = null;
+    if (this.draggedCard) {
+      this.draggedCard.classList.remove('dragging');
+      this.draggedCard.style.opacity = '';
+      this.draggedCard.style.position = '';
+      this.draggedCard.style.zIndex = '';
+      this.draggedCard = null;
+    }
   }
 
   handleTouchOver(event) {
@@ -190,11 +231,12 @@ class Dashboard extends LitElement {
     if (targetColumn && this.draggedCard) {
       this.handleCardMove(targetColumn);
     }
+    this.handleTouchEnd(event);
   }
 
   handleCardMove(targetColumn) {
-    const sourceColumn = this.draggedCard.closest('.column');
-    if (targetColumn !== sourceColumn) {
+    const sourceColumn = this.draggedCard ? this.draggedCard.closest('.column') : null;
+    if (targetColumn && sourceColumn && targetColumn !== sourceColumn) {
       const sourceColumnId = sourceColumn.dataset.columnId;
       const targetColumnId = targetColumn.dataset.columnId;
 
@@ -223,6 +265,12 @@ class Dashboard extends LitElement {
 
   render() {
     return html`
+        <!-- Header and Back Button -->
+        <div class="header">
+          <button class="back-button" @click="${(e) => this.goBack(e)}">←</button>
+          <h2>Client Details for ${this.clientName}</h2>
+        </div>
+
       <div class="dashboard">
         ${Object.keys(this.columns).map(columnId => html`
           <div class="column" data-column-id="${columnId}">
