@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - Feature/AzureSetup
+      - Feature/Dashboard
 
 jobs:
   build:
