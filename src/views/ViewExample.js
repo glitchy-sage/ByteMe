@@ -16,7 +16,7 @@ class ViewExample extends ViewBase {
       top: 0;
       left: 0;
       font-family: Arial, sans-serif;
-      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+      // box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
       text-align: center;
     }
   `];

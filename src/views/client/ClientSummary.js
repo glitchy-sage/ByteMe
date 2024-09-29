@@ -25,7 +25,7 @@ class ClientSummary extends ViewBase {
     css`
       /* General styles */
       :host {
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+        // box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
       }
       body {
         background-color: #f9f9f9;
@@ -283,7 +283,7 @@ class ClientSummary extends ViewBase {
       @media (min-width: 1024px) {
         .client-profile-container {
           max-width: 1200px;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+          // box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .arrow-left {

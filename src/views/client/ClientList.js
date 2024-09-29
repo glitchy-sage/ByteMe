@@ -36,7 +36,7 @@ class ClientList extends ViewBase {
         background-color: #fff;
         border: 1px solid #ddd;
         border-radius: 10px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        // box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         transition: transform 0.2s ease;
       }
 
