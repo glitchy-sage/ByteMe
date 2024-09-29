@@ -118,17 +118,18 @@ class ClientDetails extends ViewBase {
     super();
     this.clientName = '';
     this.changesMade = false;
-    this.surname = `Bernhardt`;
-    this.name = `Natalie`;
-    this.nickname = `Nat`;
-    this.idNumber = `7712150243080`;
+    this.surname = ``;
+    this.name = ``;
+    this.nickname = ``;
+    this.idNumber = ``;
     this.passport = ``;
     this.passportExpiry = ``;
-    this.dependants = 1;
+    this.dependants = 0;
     this.dateDeceased = ``;
-    this.email = `natalie.benvenuti@ucs-solutions.co.za`;
-    this.telephone = `072 640 4035`;
-    this.address = `5 Flufftail close, Strand`;
+    this.email = ``;
+    this.telephone = ``;
+    this.address = ``;
+    // this.initialise();
   }
 
   connectedCallback() {
@@ -149,6 +150,22 @@ class ClientDetails extends ViewBase {
     this.changesMade = true;
     const btnGroup = this.shadowRoot.querySelector('.btn-group');
     btnGroup.style.display = 'flex';
+  }
+
+  initialise() {
+    if(this.clientName === ``) {
+      this.surname = `Bernhardt`;
+      this.name = `Natalie`;
+      this.nickname = `Nat`;
+      this.idNumber = `7712150243080`;
+      this.passport = ``;
+      this.passportExpiry = ``;
+      this.dependants = 1;
+      this.dateDeceased = ``;
+      this.email = `natalie.benvenuti@ucs-solutions.co.za`;
+      this.telephone = `072 640 4035`;
+      this.address = `5 Flufftail close, Strand`;  
+    }
   }
 
   render() {
