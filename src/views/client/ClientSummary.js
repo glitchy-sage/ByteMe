@@ -24,9 +24,6 @@ class ClientSummary extends ViewBase {
     sharedStyles,
     css`
       /* General styles */
-      :host {
-        // box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-      }
       body {
         background-color: #f9f9f9;
         margin: 0;
@@ -37,7 +34,6 @@ class ClientSummary extends ViewBase {
         margin: 0 auto;
         padding: 20px;
         max-width: 1200px;
-        // box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       }
 
       .header {

@@ -3,11 +3,9 @@ import { css } from 'lit';
 export const sharedStyles = css`
   :host {
     font-family: Arial, sans-serif;
-    // box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
   }
   body {
     font-family: Arial, sans-serif;
-    // box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
   }
     /* Buttons and hover effects */
     .my-button {
