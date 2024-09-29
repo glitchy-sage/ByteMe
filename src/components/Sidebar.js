@@ -169,6 +169,7 @@ class Sidebar extends LitElement {
         <button class="menu-item new-client-button" @click="${this.addNewClient}">
           <div>
             <span class="icon">+</span>
+            <div class="menu-item-label">New Client</div>
           </div>
         </button>
 

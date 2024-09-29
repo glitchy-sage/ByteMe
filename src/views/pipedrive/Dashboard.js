@@ -1,9 +1,9 @@
-import { html, LitElement, css } from 'lit';
+import { html, css } from 'lit';
 import { sharedStyles } from '/src/styles/shared-styles'; // Assuming you have shared styles
-import { ViewBase } from '../ViewBase';
+import { ViewBase } from '/src/views/ViewBase.js'; // Importing ViewBase
 
 class Dashboard extends ViewBase {
-
+  
   static properties = {
     columns: { type: Object },
     draggedCard: { type: Object },
@@ -28,7 +28,6 @@ class Dashboard extends ViewBase {
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         min-height: 400px;
         margin: 5px;
-        padding-bottom: 50px;
       }
 
       .card {
