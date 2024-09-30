@@ -2,6 +2,7 @@ import { LitElement, html, css } from 'lit';
 import '/src/components/CollapseComponent.js';
 import { ViewBase } from '../ViewBase.js';
 import { sharedStyles } from '../../styles/shared-styles.js';
+import { store } from '/src/Store';
 
 class ClientDetails extends ViewBase {
   static styles = [
@@ -129,13 +130,14 @@ class ClientDetails extends ViewBase {
     this.email = ``;
     this.telephone = ``;
     this.address = ``;
-    // this.initialise();
+    this.initialise();
   }
 
   connectedCallback() {
     super.connectedCallback();
-    const urlParams = new URLSearchParams(window.location.search);
-    this.clientName = urlParams.get('client');
+    const storedClientInfo = store.get('clientInfo');
+    this.clientName = storedClientInfo.client.firstName;
+    console.log(this.clientName + " client name");
   }
 
   firstUpdated() {
@@ -153,7 +155,9 @@ class ClientDetails extends ViewBase {
   }
 
   initialise() {
-    if(this.clientName === ``) {
+    console.log(this.clientName + " client name in initialise");
+
+    if(!this.clientName) {
       this.surname = `Bernhardt`;
       this.name = `Natalie`;
       this.nickname = `Nat`;

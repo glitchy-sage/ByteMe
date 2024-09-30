@@ -1,33 +1,91 @@
-name: Node.js CI/CD
+name: CI/CD Pipeline for Node.js App
 
 on:
   push:
     branches:
       - main
       - Feature/Dashboard
+  workflow_dispatch:
+
+env:
+  AZURE_WEBAPP_NAME: ByteMe          # Change to your web app's name
+  AZURE_WEBAPP_PACKAGE_PATH: '.'     # Path to the app package
+  NODE_VERSION: '20.x'               # Node.js version to use
+
+permissions:
+  contents: read
 
 jobs:
+  # Build job
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20'
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
 
-    - name: Install dependencies
-      run: npm install
+      - name: Install dependencies
+        run: npm install
 
-    - name: Build the app
-      run: npm run build
+      - name: Build the app
+        run: npm run build --if-present
 
-    - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: './public'  # Ensure this matches your output directory as defined in webpack.config.js
+      - name: Run tests (if applicable)
+        run: npm run test --if-present
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v3
+        with:
+          name: node-app
+          path: .
+
+  # Deployment job for Production (main branch)
+  deploy_prod:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: node-app
+
+      - name: 'Deploy to Azure Web App (Production)'
+        uses: azure/webapps-deploy@v2
+        id: deploy-to-webapp
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+  # Deployment job for Feature branch (Development)
+  deploy_dev:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/Feature/Dashboard'
+    environment:
+      name: 'Development'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: node-app
+
+      - name: 'Deploy to Azure Web App (Development)'
+        uses: azure/webapps-deploy@v2
+        id: deploy-to-webapp
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
