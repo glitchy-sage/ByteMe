@@ -219,21 +219,21 @@ class ClientDetails extends ViewBase {
           </div>
           <div class="form-group">
             <label for="surname">Surname</label>
-            <input type="text" class="form-control" id="surname" value="${this.surname}">
+            <input type="text" class="form-control" id="surname" placeholder="Doe" value="${this.surname}">
           </div>
           <div class="form-group">
             <label for="firstName">First Name</label>
-            <input type="text" class="form-control" id="firstName" value="${this.name}">
+            <input type="text" class="form-control" id="firstName" placeholder="John" value="${this.name}">
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group">
             <label for="initials">Initials</label>
-            <input type="text" class="form-control" id="initials" placeholder="N" value="${this.name.substring(0,1)}">
+            <input type="text" class="form-control" id="initials" placeholder="JD" value="${this.name.substring(0,1)}">
           </div>
           <div class="form-group">
             <label for="nickname">Nick Name</label>
-            <input type="text" class="form-control" id="nickname" placeholder="Nick Name" value="${this.nickname}">
+            <input type="text" class="form-control" id="nickname" placeholder="JD" value="${this.nickname}">
           </div>
         </div>
       </div>
@@ -305,7 +305,7 @@ class ClientDetails extends ViewBase {
         <div class="col-md-6">
           <div class="form-group">
             <label for="dependants">Number of dependants</label>
-            <input type="number" class="form-control" id="dependants" value="${this.dependants}">
+            <input type="number" class="form-control" id="dependants" placeholder="1" value="${this.dependants}">
           </div>
         </div>
         <div class="col-md-6">
