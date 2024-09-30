@@ -3,11 +3,9 @@ import { css } from 'lit';
 export const sharedStyles = css`
   :host {
     font-family: Arial, sans-serif;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
   }
   body {
     font-family: Arial, sans-serif;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
   }
     /* Buttons and hover effects */
     .my-button {
@@ -17,7 +15,7 @@ export const sharedStyles = css`
       border: none;
       border-radius: 20px;
       cursor: pointer;
-      font-size: 1rem;
+      font-size: 12px;
     }
 
     .my-button:hover {
@@ -46,12 +44,9 @@ export const sharedStyles = css`
     margin-bottom: 20px;
   }
   .header {
-    background-color: rgb(255, 255, 255);
     height: 50px;
-    padding-left: 10px;
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    margin-bottom: 20px;
   }
 `;

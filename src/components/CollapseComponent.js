@@ -20,7 +20,7 @@ class CollapseComponent extends LitElement {
 
     .content {
       padding: 10px;
-      background-color: #fff;
+      // background-color: #fff;
       display: none;
       border-top: 1px solid #ddd;
     }

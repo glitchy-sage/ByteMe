@@ -1,9 +1,7 @@
-// import { AuditModel } from './models/AuditModel.js';
 import Configuration from './Configuration.js';
 import { Constants } from './elements/Constants.js';
 import { DateTime } from 'luxon';
 import { HttpClient } from './HttpClient.js';
-// import LogStore from './stores/LogStore.js';
 import SecurityContext from './SecurityContext.js';
 import { Utilities } from './Utilities.js';
 

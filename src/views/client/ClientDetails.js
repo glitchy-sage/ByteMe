@@ -1,94 +1,171 @@
 import { LitElement, html, css } from 'lit';
 import '/src/components/CollapseComponent.js';
-import { ViewBase } from '../ViewBase.js'; // Import the ViewBase class
+import { ViewBase } from '../ViewBase.js';
 import { sharedStyles } from '../../styles/shared-styles.js';
 
 class ClientDetails extends ViewBase {
   static styles = [
     sharedStyles,
     css`
-    :host {
-      display: block;
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      max-width: 900px;
-      margin: 0 auto;
-    }
+      :host {
+        display: block;
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        overflow: auto;
+        max-height: 840px;
+        margin: 0 auto;
+      }
 
-    h2 {
-      font-size: 1.5rem;
-      color: #333;
-      margin-bottom: 20px;
-    }
+      h2 {
+        font-size: 1.5rem;
+        color: #333;
+        margin-bottom: 20px;
+      }
 
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
 
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      color: #495057;
-      font-weight: 500;
-    }
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #495057;
+        font-weight: 500;
+      }
 
-    input, select {
-      width: auto;
-      padding: 0.375rem 0.75rem;
-      font-size: 1rem;
-      color: #495057;
-      background-color: #fff;
-      background-clip: padding-box;
-      border: 1px solid #ced4da;
-      border-radius: 0.25rem;
-    }
+      input,
+      select {
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        box-sizing: border-box;
+      }
 
-    button {
-      padding: 0.375rem 0.75rem;
-      font-size: 1rem;
-      border-radius: 0.25rem;
-    }
-    
-    .form-inline {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+      button {
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        background-color: #6c757d;
+        border: none;
+      }
 
-    .content-group {
-      background-color: #f8f9fa;
-      padding: 10px;
-      border-radius: 5px;
-      margin-bottom: 15px;
-    }
-    
-    .btn-group {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 20px;
-    }
-    .back-button {
-      border: 0px;
-      background-color: transparent;
-    }
-    .row{
+      .form-inline {
         display: flex;
-    justify-content: space-evenly;}
-  `];
+        align-items: center;
+        gap: 10px;
+      }
+
+      .content-group {
+        background-color: #f8f9fa;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+      }
+
+      .btn-group {
+        display: none;
+        justify-content: space-between;
+        margin-top: 20px;
+      }
+
+      .back-button {
+        border: 0px;
+        background-color: transparent;
+        cursor: pointer;
+        font-size: 1.2rem;
+      }
+
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+
+      .col-md-6 {
+        flex: 1 1 calc(50% - 20px);
+      }
+
+      @media (max-width: 768px) {
+        .col-md-6 {
+          flex: 1 1 100%;
+        }
+
+        .btn-group {
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .row {
+          flex-direction: column;
+          gap: 10px;
+        }
+      }
+    `,
+  ];
 
   static properties = {
-    clientName: { type: String }
+    clientName: { type: String },
+    changesMade: { type: Boolean }
   };
 
   constructor() {
     super();
     this.clientName = '';
+    this.changesMade = false;
+    this.surname = ``;
+    this.name = ``;
+    this.nickname = ``;
+    this.idNumber = ``;
+    this.passport = ``;
+    this.passportExpiry = ``;
+    this.dependants = 0;
+    this.dateDeceased = ``;
+    this.email = ``;
+    this.telephone = ``;
+    this.address = ``;
+    // this.initialise();
   }
 
   connectedCallback() {
     super.connectedCallback();
     const urlParams = new URLSearchParams(window.location.search);
     this.clientName = urlParams.get('client');
+  }
+
+  firstUpdated() {
+    // Listen for changes in the input fields
+    const inputs = this.shadowRoot.querySelectorAll('input, select');
+    inputs.forEach(input => {
+      input.addEventListener('input', () => this.handleInputChange());
+    });
+  }
+
+  handleInputChange() {
+    this.changesMade = true;
+    const btnGroup = this.shadowRoot.querySelector('.btn-group');
+    btnGroup.style.display = 'flex';
+  }
+
+  initialise() {
+    if(this.clientName === ``) {
+      this.surname = `Bernhardt`;
+      this.name = `Natalie`;
+      this.nickname = `Nat`;
+      this.idNumber = `7712150243080`;
+      this.passport = ``;
+      this.passportExpiry = ``;
+      this.dependants = 1;
+      this.dateDeceased = ``;
+      this.email = `natalie.benvenuti@ucs-solutions.co.za`;
+      this.telephone = `072 640 4035`;
+      this.address = `5 Flufftail close, Strand`;  
+    }
   }
 
   render() {
@@ -138,21 +215,21 @@ class ClientDetails extends ViewBase {
           </div>
           <div class="form-group">
             <label for="surname">Surname</label>
-            <input type="text" class="form-control" id="surname" placeholder="Bernhardt" value="Bernhardt">
+            <input type="text" class="form-control" id="surname" value="${this.surname}">
           </div>
           <div class="form-group">
             <label for="firstName">First Name</label>
-            <input type="text" class="form-control" id="firstName" placeholder="Natalie" value="Natalie">
+            <input type="text" class="form-control" id="firstName" value="${this.name}">
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group">
             <label for="initials">Initials</label>
-            <input type="text" class="form-control" id="initials" placeholder="N" value="N">
+            <input type="text" class="form-control" id="initials" placeholder="N" value="${this.name.substring(0,1)}">
           </div>
           <div class="form-group">
             <label for="nickname">Nick Name</label>
-            <input type="text" class="form-control" id="nickname" placeholder="Nick Name">
+            <input type="text" class="form-control" id="nickname" placeholder="Nick Name" value="${this.nickname}">
           </div>
         </div>
       </div>
@@ -165,7 +242,7 @@ class ClientDetails extends ViewBase {
         <div class="col-md-6">
           <div class="form-group">
             <label for="saIdNumber">South African ID number</label>
-            <input type="text" class="form-control" id="saIdNumber" placeholder="7712150243080" value="7712150243080">
+            <input type="text" class="form-control" id="saIdNumber" placeholder="7712150243080" value="${this.idNumber}">
           </div>
           <div class="form-group">
             <label for="countryOfBirth">Country of birth</label>
@@ -201,11 +278,11 @@ class ClientDetails extends ViewBase {
           </div>
           <div class="form-group">
             <label for="passportNumber">Passport number</label>
-            <input type="text" class="form-control" id="passportNumber" placeholder="">
+            <input type="text" class="form-control" id="passportNumber" placeholder="" value="${this.passport}">
           </div>
           <div class="form-group">
             <label for="passportExpiryDate">Passport expiry date</label>
-            <input type="text" class="form-control" id="passportExpiryDate" placeholder="dd/mm/yyyy">
+            <input type="text" class="form-control" id="passportExpiryDate" placeholder="dd/mm/yyyy" value="${this.passportExpiry}">
           </div>
           <div class="form-group">
             <label for="passportCountryOfIssue">Passport country of issue</label>
@@ -224,7 +301,7 @@ class ClientDetails extends ViewBase {
         <div class="col-md-6">
           <div class="form-group">
             <label for="dependants">Number of dependants</label>
-            <input type="number" class="form-control" id="dependants" value="0">
+            <input type="number" class="form-control" id="dependants" value="${this.dependants}">
           </div>
         </div>
         <div class="col-md-6">
@@ -234,7 +311,7 @@ class ClientDetails extends ViewBase {
           </div>
           <div class="form-group">
             <label for="dateDeceased">Date deceased</label>
-            <input type="text" class="form-control" id="dateDeceased" placeholder="dd/mm/yyyy">
+            <input type="text" class="form-control" id="dateDeceased" placeholder="dd/mm/yyyy" value="${this.dateDeceased}">
           </div>
         </div>
       </div>
@@ -258,7 +335,7 @@ class ClientDetails extends ViewBase {
         <!-- Email Section -->
         <div class="form-group">
           <label for="email">Email Address</label>
-          <input type="email" class="form-control" id="email" value="natalie.benvenuti@ucs-solutions.co.za">
+          <input type="email" class="form-control" id="email" value="${this.email}">
         </div>
 
         <!-- Telephone Section -->
@@ -271,13 +348,13 @@ class ClientDetails extends ViewBase {
         </div>
         <div class="form-group">
           <label for="phoneNumber">Telephone number</label>
-          <input type="text" class="form-control" id="phoneNumber" value="072 640 4035">
+          <input type="text" class="form-control" id="phoneNumber" value="${this.telephone}">
         </div>
 
         <!-- Address Section -->
         <div class="form-group">
           <label for="address">Address</label>
-          <input type="text" class="form-control" id="address" placeholder="">
+          <input type="text" class="form-control" id="address" placeholder="" value="${this.address}">
         </div>
       </div>
     `;
