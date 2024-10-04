@@ -1,36 +1,56 @@
-name: Node.js CI/CD
+name: Build and Deploy to Azure Web App
 
 on:
   push:
     branches:
       - main
-      - Feature/AzureSetup
+      - Feature/AzureSetup  # Triggers on pushes to the `main` or `Feature/AzureSetup` branch
 
 jobs:
-  jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
+      # Step 1: Checkout the repository code
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Build
-        run: |
-          echo "Building the project"
-          # your build command here
+
+      # Step 2: Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'  # Specify your desired node version
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: Build the app
+      - name: Build the project
+        run: npm run build
+
+      # Step 5: Upload build artifacts (Optional)
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-build
+          path: ./public
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/Feature/AzureSetup'
+
     steps:
-      - name: Deploy
-        run: |
-          echo "Deploying the project"
-          # your deploy command here
-      
-      - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: './public'  # Ensure this matches your output directory as defined in webpack.config.js
+      # Step 1: Download the built artifact (Optional)
+      - name: Download build artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: app-build
+
+      # Step 2: Deploy to Azure Web App
+      - name: 'Deploy to Azure WebApp'
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}  # Set in your repo or Actions secrets
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}  # Azure Web App publish profile from Secrets
+          package: './public'  # Ensure this matches your output directory as defined in webpack.config.js
