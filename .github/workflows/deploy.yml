@@ -1,4 +1,4 @@
-name: Build and Deploy to Azure Web App
+name: Azure Web App Deploy
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
       - Feature/Dashboard  # Triggers on pushes to `main` or `Feature/AzureSetup` branch
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,7 +21,6 @@ jobs:
         with:
           node-version: '16'  # Specify your desired node version
 
-      # Step 3: Install dependencies
       - name: Install dependencies
         run: npm install
 
