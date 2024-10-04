@@ -7,25 +7,28 @@ on:
       - Feature/AzureSetup
 
 jobs:
+  jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Build
+        run: |
+          echo "Building the project"
+          # your build command here
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20'
-
-    - name: Install dependencies
-      run: npm install
-
-    - name: Build the app
-      run: npm run build
-
-    - name: Deploy to Azure Web App
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/Feature/AzureSetup'
+    steps:
+      - name: Deploy
+        run: |
+          echo "Deploying the project"
+          # your deploy command here
+      
+      - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
