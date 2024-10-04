@@ -31,7 +31,7 @@ jobs:
 
       # Step 5: Upload build artifacts (Optional)
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: app-build
           path: ./public
@@ -43,7 +43,7 @@ jobs:
     steps:
       # Step 1: Download the built artifact (Optional)
       - name: Download build artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: app-build
 
