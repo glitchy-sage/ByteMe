@@ -13,11 +13,11 @@ jobs:
     steps:
       # Step 1: Checkout the repository code
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       # Step 2: Set up Node.js environment
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: '16'  # Specify your desired node version
 
@@ -29,25 +29,12 @@ jobs:
       - name: Build the project
         run: npm run build
 
-      # Step 5: Upload build artifacts (Optional)
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-build
-          path: ./public
-
   deploy:
     needs: build
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Download the built artifact (Optional)
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: app-build
-
-      # Step 2: Deploy to Azure Web App
+      # Step 1: Deploy to Azure Web App
       - name: 'Deploy to Azure WebApp'
         uses: azure/webapps-deploy@v2
         with:
