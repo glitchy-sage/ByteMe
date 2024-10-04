@@ -1,29 +1,33 @@
-name: Node.js CI/CD
+name: Build and Deploy to Azure Web App
 
 on:
   push:
     branches:
       - main
-      - Feature/AzureSetup
+      - Feature/AzureSetup  # Triggers on pushes to `main` or `Feature/AzureSetup` branch
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      # Step 1: Checkout the repository code
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20'
+      # Step 2: Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'  # Specify your desired node version
 
-    - name: Install dependencies
-      run: npm install
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm install
 
-    - name: Build the app
-      run: npm run build
+      # Step 4: Build the app
+      - name: Build the project
+        run: npm run build
 
   deploy:
     needs: build
@@ -34,7 +38,15 @@ jobs:
       - name: 'Deploy to Azure WebApp'
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}  # Set in your repo or Actions secrets
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}  # Azure Web App publish profile from Secrets
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}  # Azure Web App name
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}  # Publish profile secret from Azure
           package: './public'  # Ensure this matches your output directory as defined in webpack.config.js
 
+  post-deploy:
+    needs: deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Additional post-deployment steps, if any, can go here
+      - name: Post-deployment checks or notifications
+        run: echo "Deployment complete"
