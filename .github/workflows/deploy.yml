@@ -3,49 +3,31 @@ name: Azure Web App Deploy
 on:
   push:
     branches:
-      - main
-      - Feature/Dashboard  # Triggers on pushes to `main` or `Feature/AzureSetup` branch
+      - main  # Change this to your default branch if it's not 'main'
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the repository code
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js environment
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16'  # Specify your desired node version
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16.x'  # Use the Node.js version specified in your project
 
-      - name: Install dependencies
-        run: npm install
+    - name: Install dependencies
+      run: npm install
 
-      # Step 4: Build the app
-      - name: Build the project
-        run: npm run build
+    - name: Build project
+      run: npm run build  # Adjust if your build command is different
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ByteMe # Replace with your Azure Web App name
+        slot-name: production
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
 
-    steps:
-      # Step 1: Deploy to Azure Web App
-      - name: 'Deploy to Azure WebApp'
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}  # Azure Web App name
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}  # Publish profile secret from Azure
-          package: './public'  # Ensure this matches your output directory as defined in webpack.config.js
-
-  post-deploy:
-    needs: deploy
-    runs-on: ubuntu-latest
-
-    steps:
-      # Step 1: Additional post-deployment steps, if any, can go here
-      - name: Post-deployment checks or notifications
-        run: echo "Deployment complete"
