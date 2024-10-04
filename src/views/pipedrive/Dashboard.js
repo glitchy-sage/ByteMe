@@ -125,39 +125,39 @@ class Dashboard extends LitElement {
 
   handleDragStart(event) {
     this.draggedCard = event.target;
-    event.target.style.opacity = 0.5;
+    
+    // Set position absolute to prevent the layout from being affected
+    event.target.style.position = 'absolute';
+    event.target.style.zIndex = '1000'; // Ensure it's on top
+    event.target.style.opacity = '0.5';
+    
+    // Save initial position to move it smoothly
+    this.initialX = event.clientX;
+    this.initialY = event.clientY;
   }
-
+  
   handleDragEnd(event) {
+    // Reset styles after dragging
+    event.target.style.position = '';
+    event.target.style.zIndex = '';
     event.target.style.opacity = '';
+  
     this.draggedCard = null;
+    this.initialX = null;
+    this.initialY = null;
+  }  
+
+handleDragOver(event) {
+  event.preventDefault();
+  if (this.draggedCard) {
+    const deltaX = event.clientX - this.initialX;
+    const deltaY = event.clientY - this.initialY;
+
+    // Move the dragged card
+    this.draggedCard.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
   }
+}
 
-  handleDragOver(event) {
-    event.preventDefault();
-  }
-
-  handleDrop(event) {
-    event.preventDefault();
-    const targetColumn = event.target.closest('.column');
-    if (targetColumn && this.draggedCard) {
-      const sourceColumn = this.draggedCard.closest('.column');
-      if (targetColumn !== sourceColumn) {
-        const sourceColumnId = sourceColumn.dataset.columnId;
-        const targetColumnId = targetColumn.dataset.columnId;
-
-        // Move the card in the data structure
-        this.moveCard(
-          sourceColumnId,
-          targetColumnId,
-          parseInt(this.draggedCard.dataset.cardId, 10)
-        );
-
-        // Re-render the component to reflect the change
-        this.requestUpdate(); // LitElement's method to update the UI
-      }
-    }
-  }
 
   handleTouchStart(event) {
     this.touchStartX = event.touches[0].clientX;
@@ -210,15 +210,49 @@ class Dashboard extends LitElement {
     }
   }
 
+  handleDrop(event) {
+    event.preventDefault();
+    const targetColumn = event.target.closest('.column');
+    
+    if (targetColumn && this.draggedCard) {
+      const sourceColumn = this.draggedCard.closest('.column');
+      
+      // Ensure both columns are found
+      if (targetColumn && sourceColumn) {
+        const sourceColumnId = sourceColumn.dataset.columnId;
+        const targetColumnId = targetColumn.dataset.columnId;
+  
+        // Ensure that card and column ids exist
+        if (sourceColumnId && targetColumnId && this.draggedCard.dataset.cardId) {
+          this.moveCard(sourceColumnId, targetColumnId, parseInt(this.draggedCard.dataset.cardId, 10));
+  
+          // Re-render the component to reflect the change
+          this.requestUpdate();
+        }
+      }
+    }
+  }
+  
   moveCard(sourceColumnId, targetColumnId, cardId) {
     const sourceColumn = this.columns[sourceColumnId];
     const targetColumn = this.columns[targetColumnId];
-
-    const cardIndex = sourceColumn.findIndex(card => card.id === cardId);
-    if (cardIndex !== -1) {
-      const [card] = sourceColumn.splice(cardIndex, 1);
-      targetColumn.push(card);
+  
+    // Check if both columns are valid and contain cards
+    if (sourceColumn && targetColumn) {
+      const cardIndex = sourceColumn.findIndex(card => card.id === cardId);
+      if (cardIndex !== -1) {
+        const [card] = sourceColumn.splice(cardIndex, 1);
+        targetColumn.push(card);
+        
+        // Trigger re-render
+        this.requestUpdate();
+      }
     }
+  }  
+  
+  updated() {
+    // Reattach event listeners after the component has updated
+    this.addEventListeners();
   }
 
   render() {
